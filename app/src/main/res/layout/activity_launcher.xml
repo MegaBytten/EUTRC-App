@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LauncherActivity"
+    android:padding="30dp">
+
+    <TextView
+        android:id="@+id/EUTRCText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_centerHorizontal="true"
+        android:text="Exeter University Touch Rugby Club"
+        android:textSize="20dp"/>
+
+    <TextView
+        android:id="@+id/loginText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:layout_centerHorizontal="true"
+        android:text="Log In"
+        android:textSize="15dp"
+        android:layout_above="@+id/emailAddressLoginText"/>
+
+    <TextView
+        android:id="@+id/emailAddressLoginText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email Address"
+        android:layout_above="@+id/emailAddressLoginInput"
+        />
+
+    <EditText
+        android:id="@+id/emailAddressLoginInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_marginTop="5dp"
+        android:layout_centerVertical="true"
+        android:hint="ed546@exeter.ac.uk"/>
+
+    <TextView
+        android:id="@+id/passwordLoginText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Password"
+        android:layout_below="@+id/emailAddressLoginInput"
+        android:layout_marginTop="10dp"
+        />
+
+    <EditText
+        android:id="@+id/passwordLoginInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/passwordLoginText"/>
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="loginButtonAction"
+        android:text="Log in"
+        android:layout_below="@+id/passwordLoginInput"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/signupPromptText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Don't have an account?\nClick Here"
+        android:textAlignment="center"
+        android:textColor="#2A36BA"
+        android:clickable="true"
+        android:onClick="signUpPromptAction"
+        android:layout_below="@+id/loginButton"
+        android:layout_marginTop="10dp"
+        android:textSize="12dp"
+        android:layout_centerHorizontal="true"
+        />
+
+
+
+    <TextView
+        android:id="@+id/creditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="Created by Ethan de Villiers"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:clickable="true"
+        android:onClick="megabyttenRedirectAction"/>
+
+
+</RelativeLayout>
