@@ -4,17 +4,19 @@ public class User {
 
     private static User instance;
     private String email, firstName, lastName, phoneNumber, password;
+    private boolean isCoach;
 
-    public User(String email, String firstName, String lastName, String phoneNumber, String password) {
+    public User(String email, String firstName, String lastName, String phoneNumber, String password, boolean coach) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.password = password;
+        this.isCoach = coach;
     }
 
-    public static synchronized void createInstance(String email, String firstName, String lastName, String phoneNumber, String password) {
-        instance = new User(email, firstName, lastName, phoneNumber, password);
+    public static synchronized void createInstance(String email, String firstName, String lastName, String phoneNumber, String password, boolean coach) {
+        instance = new User(email, firstName, lastName, phoneNumber, password, coach);
         System.out.println("User created successfully!");
     }
 
@@ -68,6 +70,13 @@ public class User {
         this.password = password;
     }
 
+    public boolean isCoach() {
+        return isCoach;
+    }
+
+    public void setCoach(boolean isCoach) {
+        this.isCoach = isCoach;
+    }
 
 
 }

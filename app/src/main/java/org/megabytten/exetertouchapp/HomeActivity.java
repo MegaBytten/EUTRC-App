@@ -1,13 +1,13 @@
 package org.megabytten.exetertouchapp;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.os.Bundle;
-
-import com.google.android.material.navigation.NavigationBarItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.megabytten.exetertouchapp.databinding.ActivityHomeBinding;
 import org.megabytten.exetertouchapp.homefragments.EventsFragment;
@@ -17,10 +17,12 @@ import org.megabytten.exetertouchapp.homefragments.ProfileFragment;
 public class HomeActivity extends AppCompatActivity {
 
     ActivityHomeBinding binding;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        user = User.getInstance();
         //this section listens to the navigation bar and sets an ItemSelectedListener
         //it uses a switch case to cycle and find which one was selected, and then replaces
         //the frame above the nav bar via the replaceFragment() method
@@ -36,7 +38,7 @@ public class HomeActivity extends AppCompatActivity {
                     System.out.println("Replaced fragment with new EventsFragment");
                     break;
                 case R.id.homeNavHomeButton:
-                    replaceFragment(new HomeFragment());
+                    replaceFragment(HomeFragment.getInstance());
                     System.out.println("Replaced fragment with new HomeFragment");
                     break;
                 case R.id.homeNavProfileButton:
@@ -48,11 +50,12 @@ public class HomeActivity extends AppCompatActivity {
             return true;
         });
 
-        // these 3 lines sets the home button as selected and loads homeFragment when the user loads in
+        //instead of creating a new home fragment everytime, gets the static instance of homeFrag
         replaceFragment(new HomeFragment());
-        NavigationBarItemView homeNavButton = findViewById(R.id.homeNavHomeButton);
-        homeNavButton.setSelected(true);
+        BottomNavigationView homeNav = findViewById(R.id.bottomNavigationView);
+        homeNav.setSelectedItemId(R.id.homeNavHomeButton);
     }
+
 
     private void replaceFragment(Fragment fragment){
         /*
