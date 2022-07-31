@@ -109,7 +109,7 @@ public class SignupActivity extends AppCompatActivity {
         URL obj = new URL("http://megabytten.org/eutrcapp/signup");
 
         //sets the encoded query
-        String query = String.format("email=%s&firstName=%s&lastName=%s&phoneNumber=%s&password=%s"
+        String query = String.format("email=%s&firstName=%s&lastName=%s&phoneNumber=%s&password=%s&coach=0"
                 , URLEncoder.encode(email, charset)
                 , URLEncoder.encode(firstName, charset)
                 , URLEncoder.encode(lastName, charset)

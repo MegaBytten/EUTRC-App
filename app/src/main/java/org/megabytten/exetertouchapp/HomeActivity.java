@@ -34,7 +34,7 @@ public class HomeActivity extends AppCompatActivity {
             System.out.println("Registered on button click! Id: " + item.getItemId());
             switch (item.getItemId()){
                 case R.id.homeNavCalendarButton:
-                    replaceFragment(new EventsFragment());
+                    replaceFragment(EventsFragment.getInstance());
                     System.out.println("Replaced fragment with new EventsFragment");
                     break;
                 case R.id.homeNavHomeButton:

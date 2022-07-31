@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +41,7 @@ public class HomeFragment extends Fragment {
 
     public static HomeFragment getInstance(){
         if (homeFragment == null){
+            System.out.println("Initializing homeFragment.");
             homeFragment = new HomeFragment();
         }
         return homeFragment;
@@ -107,6 +110,20 @@ public class HomeFragment extends Fragment {
 
         //do coach/player specific stuff
 
+        if (user.isCoach()){
+            //coach layout init
+
+        } else {
+            //player layout init
+            LinearLayout hpRSVPContainer = view.findViewById(R.id.hpRSVPContainer);
+            LinearLayout dvRSVPContainer = view.findViewById(R.id.dvRSVPContainer);
+            LinearLayout cbRSVPContainer = view.findViewById(R.id.cbRSVPContainer);
+
+            hpRSVPContainer.setVisibility(View.VISIBLE);
+            dvRSVPContainer.setVisibility(View.VISIBLE);
+            cbRSVPContainer.setVisibility(View.VISIBLE);
+        }
+
         return view;
     }
 
@@ -128,13 +145,9 @@ public class HomeFragment extends Fragment {
             System.out.println("JSON Trainings completed :: " + sb.toString());
             JSONObject obj = new JSONObject(sb.toString());
 
-            System.out.println(obj.getJSONObject("hpTraining").toString());
-
             hpTrainingJSON = obj.getJSONObject("hpTraining");
             dvTrainingJSON = obj.getJSONObject("dvTraining");
             cbTrainingJSON = obj.getJSONObject("cbTraining");
-
-            System.out.println(hpTrainingJSON);
             con.disconnect();
         }
     }
@@ -142,38 +155,78 @@ public class HomeFragment extends Fragment {
 
 
     private void loadTrainingInfo() throws JSONException {
-        //HP Training section load
-        TextView hpSectionDateData = view.findViewById(R.id.hpSectionDateData);
-        TextView hpSectionTimeData = view.findViewById(R.id.hpSectionTimeData);
-        TextView hpSectionLocationData = view.findViewById(R.id.hpSectionLocationData);
-        TextView hpSectionDrillsData = view.findViewById(R.id.hpSectionDrillsData);
+        //some trainings may be null, need to null check before updating
+        if (hpTrainingJSON.getString("date").equalsIgnoreCase("none")){
+            ScrollView hpTrainingContainer = getActivity().findViewById(R.id.hpTrainingContainer);
+            hpTrainingContainer.setVisibility(View.GONE);
 
-        hpSectionDateData.setText(hpTrainingJSON.getString("date"));
-        hpSectionTimeData.setText(hpTrainingJSON.getString("time"));
-        hpSectionLocationData.setText(hpTrainingJSON.getString("location"));
-        hpSectionDrillsData.setText(hpTrainingJSON.getString("drills"));
+            TextView hpNullTrainingDataTxt = getActivity().findViewById(R.id.hpNullTrainingDataTxt);
+            hpNullTrainingDataTxt.setVisibility(View.VISIBLE);
 
-        //DV Training section load
-        TextView dvSectionDateData = view.findViewById(R.id.dvSectionDateData);
-        TextView dvSectionTimeData = view.findViewById(R.id.dvSectionTimeData);
-        TextView dvSectionLocationData = view.findViewById(R.id.dvSectionLocationData);
-        TextView dvSectionDrillsData = view.findViewById(R.id.dvSectionDrillsData);
+            LinearLayout hpRSVPContainer = getActivity().findViewById(R.id.hpRSVPContainer);
+            hpRSVPContainer.setVisibility(View.GONE);
 
-        dvSectionDateData.setText(dvTrainingJSON.getString("date"));
-        dvSectionTimeData.setText(dvTrainingJSON.getString("time"));
-        dvSectionLocationData.setText(dvTrainingJSON.getString("location"));
-        dvSectionDrillsData.setText(dvTrainingJSON.getString("drills"));
+        } else {
+            //HP Training section load
+            TextView hpSectionDateData = view.findViewById(R.id.hpSectionDateData);
+            TextView hpSectionTimeData = view.findViewById(R.id.hpSectionTimeData);
+            TextView hpSectionLocationData = view.findViewById(R.id.hpSectionLocationData);
+            TextView hpSectionDrillsData = view.findViewById(R.id.hpSectionDrillsData);
 
-        //CB Training section load
-        TextView cbSectionDateData = view.findViewById(R.id.cbSectionDateData);
-        TextView cbSectionTimeData = view.findViewById(R.id.cbSectionTimeData);
-        TextView cbSectionLocationData = view.findViewById(R.id.cbSectionLocationData);
-        TextView cbSectionDrillsData = view.findViewById(R.id.cbSectionDrillsData);
+            hpSectionDateData.setText(hpTrainingJSON.getString("date"));
+            hpSectionTimeData.setText(hpTrainingJSON.getString("time"));
+            hpSectionLocationData.setText(hpTrainingJSON.getString("location"));
+            hpSectionDrillsData.setText(hpTrainingJSON.getString("drills"));
+        }
 
-        cbSectionDateData.setText(cbTrainingJSON.getString("date"));
-        cbSectionTimeData.setText(cbTrainingJSON.getString("time"));
-        cbSectionLocationData.setText(cbTrainingJSON.getString("location"));
-        cbSectionDrillsData.setText(cbTrainingJSON.getString("drills"));
+        if (dvTrainingJSON.getString("date").equalsIgnoreCase("none")){
+            //No trainign data for the next week! - from server
+            //Function below: removes the scrollview containing all dummy data
+            // makes the "no trainings this week" text visible in place of scroll view
+            ScrollView dvTrainingContainer = getActivity().findViewById(R.id.dvTrainingContainer);
+            dvTrainingContainer.setVisibility(View.GONE);
+
+            TextView dvNullTrainingDataTxt = getActivity().findViewById(R.id.dvNullTrainingDataTxt);
+            dvNullTrainingDataTxt.setVisibility(View.VISIBLE);
+
+            LinearLayout dvRSVPContainer = getActivity().findViewById(R.id.dvRSVPContainer);
+            dvRSVPContainer.setVisibility(View.GONE);
+
+        } else {
+            //DV Training section load
+            TextView dvSectionDateData = view.findViewById(R.id.dvSectionDateData);
+            TextView dvSectionTimeData = view.findViewById(R.id.dvSectionTimeData);
+            TextView dvSectionLocationData = view.findViewById(R.id.dvSectionLocationData);
+            TextView dvSectionDrillsData = view.findViewById(R.id.dvSectionDrillsData);
+
+            dvSectionDateData.setText(dvTrainingJSON.getString("date"));
+            dvSectionTimeData.setText(dvTrainingJSON.getString("time"));
+            dvSectionLocationData.setText(dvTrainingJSON.getString("location"));
+            dvSectionDrillsData.setText(dvTrainingJSON.getString("drills"));
+        }
+
+        if (cbTrainingJSON.getString("date").equalsIgnoreCase("none")){
+            ScrollView cbTrainingContainer = getActivity().findViewById(R.id.cbTrainingContainer);
+            cbTrainingContainer.setVisibility(View.GONE);
+
+            TextView cbNullTrainingDataTxt = getActivity().findViewById(R.id.cbNullTrainingDataTxt);
+            cbNullTrainingDataTxt.setVisibility(View.VISIBLE);
+
+            LinearLayout cbRSVPContainer = getActivity().findViewById(R.id.cbRSVPContainer);
+            cbRSVPContainer.setVisibility(View.GONE);
+
+        } else {
+            //CB Training section load
+            TextView cbSectionDateData = view.findViewById(R.id.cbSectionDateData);
+            TextView cbSectionTimeData = view.findViewById(R.id.cbSectionTimeData);
+            TextView cbSectionLocationData = view.findViewById(R.id.cbSectionLocationData);
+            TextView cbSectionDrillsData = view.findViewById(R.id.cbSectionDrillsData);
+
+            cbSectionDateData.setText(cbTrainingJSON.getString("date"));
+            cbSectionTimeData.setText(cbTrainingJSON.getString("time"));
+            cbSectionLocationData.setText(cbTrainingJSON.getString("location"));
+            cbSectionDrillsData.setText(cbTrainingJSON.getString("drills"));
+        }
     }
 
     private void coachSetup(){

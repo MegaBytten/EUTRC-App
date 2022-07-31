@@ -9,7 +9,9 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_signup.xml" value="0.253125" />
         <entry key="app/src/main/res/layout/activity_verification.xml" value="0.24818840579710144" />
+        <entry key="app/src/main/res/layout/fragment_calendar.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_events.xml" value="0.253125" />
+        <entry key="app/src/main/res/layout/fragment_git_calendar.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.253125" />
         <entry key="app/src/main/res/layout/fragment_home_coach.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_home_user.xml" value="0.19519927536231885" />

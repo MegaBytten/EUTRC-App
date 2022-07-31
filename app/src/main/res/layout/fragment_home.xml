@@ -47,6 +47,7 @@
 
 
                 <ScrollView
+                    android:id="@+id/hpTrainingContainer"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:padding="10dp">
@@ -58,6 +59,7 @@
 
                         <!-- THIS IS FOR HP TRAINING-->
                         <LinearLayout
+
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
@@ -161,10 +163,44 @@
                     </LinearLayout>
                 </ScrollView>
 
-
+<!--                this textview is for a nullcheck, where there is no trining data within a week-->
+                <TextView
+                    android:id="@+id/hpNullTrainingDataTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No trainings for the next week!"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 <!--            THIS IS THE END OF HP SECTION-->
+
+<!--            Button for User RSVP-->
+            <LinearLayout
+                android:id="@+id/hpRSVPContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/hpUserAvailableBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#107F33"
+                    android:text="Available"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"/>
+                <Button
+                    android:id="@+id/hpUserUnavailableBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#AB1B16"
+                    android:text="Unavailable"
+                    android:layout_marginTop="5dp"/>
+
+            </LinearLayout>
 
 <!--            THIS IS BEGINING OF DEV SECTION-->
             <LinearLayout
@@ -185,6 +221,7 @@
 
 
                 <ScrollView
+                    android:id="@+id/dvTrainingContainer"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:padding="10dp">
@@ -294,8 +331,44 @@
                         </LinearLayout>
                     </LinearLayout>
                 </ScrollView>
+
+<!--                THIS textivew is for null check no DV training data-->
+                <TextView
+                    android:id="@+id/dvNullTrainingDataTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No trainings for the next week!"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:visibility="gone"/>
             </LinearLayout>
-<!--            THIS IS THE END OF DEV SECTION-->
+<!--            THIS IS THE END OF DV SECTION-->
+
+<!--            DV Button for User RSVP-->
+            <LinearLayout
+                android:id="@+id/dvRSVPContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/dvUserAvailableBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#107F33"
+                    android:text="Available"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"/>
+                <Button
+                    android:id="@+id/dvUserUnavailableBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#AB1B16"
+                    android:text="Unavailable"
+                    android:layout_marginTop="5dp"/>
+
+            </LinearLayout>
 
 <!--            THIS IS BEGINING OF CLUB SECTION-->
             <LinearLayout
@@ -316,6 +389,7 @@
 
 
                 <ScrollView
+                    android:id="@+id/cbTrainingContainer"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:padding="10dp">
@@ -325,7 +399,7 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical">
 
-                        <!-- THIS IS FOR HP TRAINING-->
+                        <!-- THIS IS FOR CB TRAINING-->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -425,11 +499,89 @@
                         </LinearLayout>
                     </LinearLayout>
                 </ScrollView>
+
+                <!--                THIS textivew is for null check no CB training data-->
+                <TextView
+                    android:id="@+id/cbNullTrainingDataTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No trainings for the next week!"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:visibility="gone"/>
             </LinearLayout>
             <!--            THIS IS THE END OF CLUB SECTION-->
+
+            <!--            cb Button for User RSVP-->
+            <LinearLayout
+                android:id="@+id/cbRSVPContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/cbUserAvailableBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#107F33"
+                    android:text="Available"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"/>
+                <Button
+                    android:id="@+id/cbUserUnavailableBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#AB1B16"
+                    android:text="Unavailable"
+                    android:layout_marginTop="5dp"/>
+
+            </LinearLayout>
+
+<!--            This is the Coaches Section!-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/coachSectionContainer"
+                android:background="#E9E3C7"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Coach's Section"
+                    android:textColor="#7d785f"
+                    android:textSize="20dp"
+                    android:textStyle="bold"/>
+
+<!--                This holds the add/remove training buttons-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFF9DD"
+                    android:gravity="center">
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Add Training"
+                        android:backgroundTint="#107F33"
+                        android:layout_margin="10dp"/>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Delete Training"
+                        android:backgroundTint="#AB1B16"
+                        android:layout_margin="10dp"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
         </LinearLayout>
-
-
     </ScrollView>
 
 </LinearLayout>
