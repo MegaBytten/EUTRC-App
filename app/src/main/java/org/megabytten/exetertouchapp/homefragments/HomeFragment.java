@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.megabytten.exetertouchapp.LauncherActivity;
 import org.megabytten.exetertouchapp.R;
+import org.megabytten.exetertouchapp.Training;
 import org.megabytten.exetertouchapp.User;
 
 import java.io.BufferedReader;
@@ -28,19 +29,18 @@ import java.net.URL;
 
 public class HomeFragment extends Fragment {
 
-    public static HomeFragment homeFragment;
+    private static HomeFragment homeFragment;
 
+    //Data-specific variables/objects
     User user;
     View view;
 
-    JSONObject hpTrainingJSON;
-    JSONObject dvTrainingJSON;
-    JSONObject cbTrainingJSON;
+    //Training-pulling specific data/variables
+    Training hpTraining, dvTraining, cbTraining;
+    static boolean jsonPulled; //needs to be static!!
 
-    boolean jsonPulled;
 
     public static HomeFragment getInstance(){
-        System.out.println("HomeFrag.getInst called");
         if (homeFragment == null){
             System.out.println("Initializing homeFragment.");
             homeFragment = new HomeFragment();
@@ -52,12 +52,6 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
-
-// TODO: 30/7/22 Add User available/unavailable to next training sessions
-// TODO: 30/7/22 add coach's 'ADD TRAINING' button
-//      --> launches new fragment, survey to take in all required details (most inputs must be in specific format or length)
-//      --> submit + back button (maybe even save draft?) : submit sends to database after input checks
 
     @Nullable
     @Override
@@ -78,15 +72,15 @@ public class HomeFragment extends Fragment {
             Thread newVerifThread = new Thread(() -> {
                 System.out.println("New Thread launched. Pulling Training JSON then Loading it.");
                 try {
-                    pullTrainingJSON();
                     jsonPulled = true;
+                    pullTrainingJSON();
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
             });
             newVerifThread.start();
         } else {
-
+            //this needs to occur or textviews will display default information from .xml!
             getActivity().runOnUiThread(() -> {
                 try {
                     loadTrainingInfo();
@@ -95,6 +89,7 @@ public class HomeFragment extends Fragment {
                 }
             });
         }
+
         //do communal stuff
 
         //do coach/player specific stuff
@@ -104,18 +99,12 @@ public class HomeFragment extends Fragment {
 
         } else {
             //player layout init
-            LinearLayout hpRSVPContainer = view.findViewById(R.id.hpRSVPContainer);
-            LinearLayout dvRSVPContainer = view.findViewById(R.id.dvRSVPContainer);
-            LinearLayout cbRSVPContainer = view.findViewById(R.id.cbRSVPContainer);
-
-            hpRSVPContainer.setVisibility(View.VISIBLE);
-            dvRSVPContainer.setVisibility(View.VISIBLE);
-            cbRSVPContainer.setVisibility(View.VISIBLE);
+            LinearLayout coachSectionContainer = view.findViewById(R.id.coachSectionContainer);
+            coachSectionContainer.setVisibility(View.GONE);
         }
 
         return view;
     }
-
 
     private void pullTrainingJSON() throws IOException, JSONException {
         URL url = new URL("http://megabytten.org/eutrcapp/trainings.json");
@@ -131,13 +120,17 @@ public class HomeFragment extends Fragment {
             while ((output = br.readLine()) != null) {
                 sb.append(output);
             }
-            System.out.println("JSON Trainings completed :: " + sb.toString());
+
+            System.out.println("JSON Trainings completed :: " + sb);
             JSONObject obj = new JSONObject(sb.toString());
 
-            hpTrainingJSON = obj.getJSONObject("hpTraining");
-            dvTrainingJSON = obj.getJSONObject("dvTraining");
-            cbTrainingJSON = obj.getJSONObject("cbTraining");
-            con.disconnect();
+            //If the JSON objects contain training information (not null information), following method will convert them into
+            //Training objects from JSON objects.
+            try {
+                saveJSONtoTrainings( obj.getJSONObject("hpTraining"), obj.getJSONObject("dvTraining"), obj.getJSONObject("cbTraining") );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             getActivity().runOnUiThread(() -> {
                 try {
@@ -147,85 +140,94 @@ public class HomeFragment extends Fragment {
                 }
             });
         }
+        con.disconnect();
     }
 
+    private void saveJSONtoTrainings(JSONObject hpTrainingJSON, JSONObject dvTrainingJSON, JSONObject cbTrainingJSON) throws Exception {
+        if (Training.jsonHasTraining(hpTrainingJSON)){
+            hpTraining = new Training(hpTrainingJSON);
+        }
 
+        if (Training.jsonHasTraining(dvTrainingJSON)){
+            dvTraining = new Training(dvTrainingJSON);
+        }
+
+        if (Training.jsonHasTraining(cbTrainingJSON)){
+            cbTraining = new Training(cbTrainingJSON);
+        }
+    }
 
     private void loadTrainingInfo() throws JSONException {
         //some trainings may be null, need to null check before updating
-        if (hpTrainingJSON.getString("date").equalsIgnoreCase("none")){
-            ScrollView hpTrainingContainer = getActivity().findViewById(R.id.hpTrainingContainer);
-            hpTrainingContainer.setVisibility(View.GONE);
-
-            TextView hpNullTrainingDataTxt = getActivity().findViewById(R.id.hpNullTrainingDataTxt);
-            hpNullTrainingDataTxt.setVisibility(View.VISIBLE);
-
-            LinearLayout hpRSVPContainer = getActivity().findViewById(R.id.hpRSVPContainer);
-            hpRSVPContainer.setVisibility(View.GONE);
+        if (hpTraining == null){
+            view.findViewById(R.id.hpTrainingContainer).setVisibility(View.GONE);
+            view.findViewById(R.id.hpRSVPContainer).setVisibility(View.GONE);
 
         } else {
             //HP Training section load
-            TextView hpSectionDateData = view.findViewById(R.id.hpSectionDateData);
-            TextView hpSectionTimeData = view.findViewById(R.id.hpSectionTimeData);
-            TextView hpSectionLocationData = view.findViewById(R.id.hpSectionLocationData);
-            TextView hpSectionDrillsData = view.findViewById(R.id.hpSectionDrillsData);
+            view.findViewById(R.id.hpNullTrainingDataTxt).setVisibility(View.GONE);
 
-            hpSectionDateData.setText(hpTrainingJSON.getString("date"));
-            hpSectionTimeData.setText(hpTrainingJSON.getString("time"));
-            hpSectionLocationData.setText(hpTrainingJSON.getString("location"));
-            hpSectionDrillsData.setText(hpTrainingJSON.getString("drills"));
+            TextView hpDate = view.findViewById(R.id.hpSectionDateData);
+            hpDate.setText(hpTraining.getFormattedDate());
+
+            TextView hpTime = view.findViewById(R.id.hpSectionTimeData);
+            hpTime.setText(hpTraining.getTime());
+
+            TextView hpLoc = view.findViewById(R.id.hpSectionLocationData);
+            hpLoc.setText(hpTraining.getLocation());
+
+            TextView hpDrills = view.findViewById(R.id.hpSectionDrillsData);
+            hpDrills.setText(hpTraining.getDrills());
+
         }
 
-        if (dvTrainingJSON.getString("date").equalsIgnoreCase("none")){
-            //No trainign data for the next week! - from server
-            //Function below: removes the scrollview containing all dummy data
-            // makes the "no trainings this week" text visible in place of scroll view
-            ScrollView dvTrainingContainer = getActivity().findViewById(R.id.dvTrainingContainer);
-            dvTrainingContainer.setVisibility(View.GONE);
-
-            TextView dvNullTrainingDataTxt = getActivity().findViewById(R.id.dvNullTrainingDataTxt);
-            dvNullTrainingDataTxt.setVisibility(View.VISIBLE);
-
-            LinearLayout dvRSVPContainer = getActivity().findViewById(R.id.dvRSVPContainer);
-            dvRSVPContainer.setVisibility(View.GONE);
+        if (dvTraining == null){
+            view.findViewById(R.id.dvTrainingContainer).setVisibility(View.GONE);
+            view.findViewById(R.id.dvRSVPContainer).setVisibility(View.GONE);
 
         } else {
             //DV Training section load
-            TextView dvSectionDateData = view.findViewById(R.id.dvSectionDateData);
-            TextView dvSectionTimeData = view.findViewById(R.id.dvSectionTimeData);
-            TextView dvSectionLocationData = view.findViewById(R.id.dvSectionLocationData);
-            TextView dvSectionDrillsData = view.findViewById(R.id.dvSectionDrillsData);
+            view.findViewById(R.id.dvNullTrainingDataTxt).setVisibility(View.GONE);
 
-            dvSectionDateData.setText(dvTrainingJSON.getString("date"));
-            dvSectionTimeData.setText(dvTrainingJSON.getString("time"));
-            dvSectionLocationData.setText(dvTrainingJSON.getString("location"));
-            dvSectionDrillsData.setText(dvTrainingJSON.getString("drills"));
+            TextView date = view.findViewById(R.id.dvSectionDateData);
+            date.setText(dvTraining.getFormattedDate());
+
+            TextView time = view.findViewById(R.id.dvSectionTimeData);
+            time.setText(dvTraining.getTime());
+
+            TextView loc = view.findViewById(R.id.dvSectionLocationData);
+            loc.setText(dvTraining.getLocation());
+
+            TextView drills = view.findViewById(R.id.dvSectionDrillsData);
+            drills.setText(dvTraining.getDrills());
         }
 
-        if (cbTrainingJSON.getString("date").equalsIgnoreCase("none")){
-            ScrollView cbTrainingContainer = getActivity().findViewById(R.id.cbTrainingContainer);
-            cbTrainingContainer.setVisibility(View.GONE);
-
-            TextView cbNullTrainingDataTxt = getActivity().findViewById(R.id.cbNullTrainingDataTxt);
-            cbNullTrainingDataTxt.setVisibility(View.VISIBLE);
-
-            LinearLayout cbRSVPContainer = getActivity().findViewById(R.id.cbRSVPContainer);
-            cbRSVPContainer.setVisibility(View.GONE);
+        if (cbTraining == null){
+            view.findViewById(R.id.cbTrainingContainer).setVisibility(View.GONE);
+            view.findViewById(R.id.cbRSVPContainer).setVisibility(View.GONE);
 
         } else {
-            //CB Training section load
-            TextView cbSectionDateData = view.findViewById(R.id.cbSectionDateData);
-            TextView cbSectionTimeData = view.findViewById(R.id.cbSectionTimeData);
-            TextView cbSectionLocationData = view.findViewById(R.id.cbSectionLocationData);
-            TextView cbSectionDrillsData = view.findViewById(R.id.cbSectionDrillsData);
+            //DV Training section load
+            view.findViewById(R.id.cbNullTrainingDataTxt).setVisibility(View.GONE);
 
-            cbSectionDateData.setText(cbTrainingJSON.getString("date"));
-            cbSectionTimeData.setText(cbTrainingJSON.getString("time"));
-            cbSectionLocationData.setText(cbTrainingJSON.getString("location"));
-            cbSectionDrillsData.setText(cbTrainingJSON.getString("drills"));
+            TextView date = view.findViewById(R.id.cbSectionDateData);
+            date.setText(cbTraining.getFormattedDate());
+
+            TextView time = view.findViewById(R.id.cbSectionTimeData);
+            time.setText(cbTraining.getTime());
+
+            TextView loc = view.findViewById(R.id.cbSectionLocationData);
+            loc.setText(cbTraining.getLocation());
+
+            TextView drills = view.findViewById(R.id.cbSectionDrillsData);
+            drills.setText(cbTraining.getDrills());
         }
     }
 
+// todo finish coach setup and buttons!!
+// TODO: 30/7/22 add coach's 'ADD TRAINING' button
+//      --> launches new fragment, survey to take in all required details (most inputs must be in specific format or length)
+//      --> submit + back button (maybe even save draft?) : submit sends to database after input checks
     private void coachSetup(){
         //make gone elements visible!
         //eg add training button! --> launches new fragment which asks for details and submits to mg.org

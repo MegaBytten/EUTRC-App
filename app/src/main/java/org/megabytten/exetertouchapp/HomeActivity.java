@@ -32,7 +32,7 @@ public class HomeActivity extends AppCompatActivity {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-            System.out.println("Registered on button click! Id: " + item.getItemId());
+//            System.out.println("Registered on button click! Id: " + item.getItemId());
             switch (item.getItemId()){
                 case R.id.homeNavCalendarButton:
                     replaceFragment(EventsFragment.getInstance());

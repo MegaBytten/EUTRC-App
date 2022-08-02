@@ -170,8 +170,7 @@
                     android:layout_height="wrap_content"
                     android:text="No trainings for the next week!"
                     android:textAlignment="center"
-                    android:layout_gravity="center"
-                    android:visibility="gone"/>
+                    android:layout_gravity="center"/>
 
             </LinearLayout>
 <!--            THIS IS THE END OF HP SECTION-->
@@ -339,8 +338,7 @@
                     android:layout_height="wrap_content"
                     android:text="No trainings for the next week!"
                     android:textAlignment="center"
-                    android:layout_gravity="center"
-                    android:visibility="gone"/>
+                    android:layout_gravity="center"/>
             </LinearLayout>
 <!--            THIS IS THE END OF DV SECTION-->
 
@@ -507,8 +505,7 @@
                     android:layout_height="wrap_content"
                     android:text="No trainings for the next week!"
                     android:textAlignment="center"
-                    android:layout_gravity="center"
-                    android:visibility="gone"/>
+                    android:layout_gravity="center"/>
             </LinearLayout>
             <!--            THIS IS THE END OF CLUB SECTION-->
 

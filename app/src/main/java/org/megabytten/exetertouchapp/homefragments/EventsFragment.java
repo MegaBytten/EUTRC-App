@@ -1,10 +1,7 @@
 package org.megabytten.exetertouchapp.homefragments;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +38,7 @@ public class EventsFragment extends Fragment {
     LocalDate calendarDate;
 
     //calendar cells views for ViewTrainings updates
+    TextView trainingsInfoTitle;
     TextView trainingsInfo;
     Button closeBtn;
     int previousButtonId;
@@ -83,6 +81,9 @@ public class EventsFragment extends Fragment {
             });
         });
 
+        trainingsInfoTitle = view.findViewById(R.id.trainingInfoTitle);
+        trainingsInfoTitle.setPaintFlags(trainingsInfoTitle.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
         trainingsInfo = view.findViewById(R.id.trainingsInfo);
         trainingsInfo.setVisibility(View.INVISIBLE);
         trainingsInfo.setTextColor(Color.BLACK);
@@ -103,8 +104,6 @@ public class EventsFragment extends Fragment {
     ################################################################################################
     ################################################################################################
     ############################### Calendar Init/Updating methods #################################
-    ################################################################################################
-    ################################################################################################
     ################################################################################################
     ################################################################################################
      */
@@ -278,8 +277,8 @@ public class EventsFragment extends Fragment {
      /*
     ################################################################################################
     ############################# Calendar TRAINING updater methods ################################
-    ################################################################################################
-    ################################################################################################
+    ###################### Methods that are used to initialise or update ###########################
+    ######################## the Training info, below the main calendar ############################
     ################################################################################################
      */
 
@@ -351,7 +350,6 @@ public class EventsFragment extends Fragment {
         }
     }
 
-
     private void updateCalendarEvents(JSONArray obj, ArrayList<Training> trainings) throws JSONException {
 
         for (Training training : trainings){
@@ -382,36 +380,15 @@ public class EventsFragment extends Fragment {
         }
     }
 
-
-    /*
-    ################################################################################################
-    ############################## Button onClick Listeners ########################################
-    ################################################################################################
-    ################################################################################################
-    ################################################################################################
-     */
-
-    public void onNextMonth(){
-        onCloseBtn();
-        calendarDate = calendarDate.plusMonths(1);
-        updateCalendar();
-    }
-
-
-    public void onLastMonth() {
-        onCloseBtn();
-        calendarDate = calendarDate.minusMonths(1);
-        updateCalendar();
-    }
-
-
     public void updateTextView(ArrayList<Training> trainings, TextView trainingsInfo){
+        trainingsInfoTitle.setVisibility(View.VISIBLE);
+        trainingsInfo.setVisibility(View.VISIBLE);
+
         if (trainings.size() == 0){
             trainingsInfo.setText("No trainings/matches on selected day.");
-            trainingsInfo.setVisibility(View.VISIBLE);
+
         } else {
             trainingsInfo.setText("");
-            trainingsInfo.setVisibility(View.VISIBLE);
             for (int x = 0; x < trainings.size(); x++){
                 System.out.println("Updating trainingsInfo, counter = " + x);
                 System.out.println("Trainings on selected day: " + trainings);
@@ -431,10 +408,31 @@ public class EventsFragment extends Fragment {
 
     }
 
+    /*
+    ################################################################################################
+    ############################## Button onClick Listeners ########################################
+    ################################################################################################
+    ################################################################################################
+    ################################################################################################
+     */
+
+    public void onNextMonth(){
+        onCloseBtn();
+        calendarDate = calendarDate.plusMonths(1);
+        updateCalendar();
+    }
+
+    public void onLastMonth() {
+        onCloseBtn();
+        calendarDate = calendarDate.minusMonths(1);
+        updateCalendar();
+    }
+
     private void onCloseBtn(){
         trainingsInfo.setText("");
         trainingsInfo.setVisibility(View.INVISIBLE);
         closeBtn.setVisibility(View.INVISIBLE);
+        trainingsInfoTitle.setVisibility(View.INVISIBLE);
 
         for (CustomTextView ctv: calendarCells){
             if (ctv.getId() == previousButtonId){
