@@ -1,31 +1,49 @@
 package org.megabytten.exetertouchapp.homefragments;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.megabytten.exetertouchapp.CustomTextView;
 import org.megabytten.exetertouchapp.R;
+import org.megabytten.exetertouchapp.Training;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.temporal.TemporalAdjuster;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 
 public class EventsFragment extends Fragment {
     private static EventsFragment eventsFragment;
 
     View view;
-    static boolean isCalendarInit = false;
+    boolean isCalendarInit = false;
     ArrayList<LinearLayout> calendarRowLinLays;
-    ArrayList<TextView> calendarCells;
+    ArrayList<CustomTextView> calendarCells;
     LocalDate calendarDate;
+
+    //calendar cells views for ViewTrainings updates
+    TextView trainingsInfo;
+    Button closeBtn;
+    int previousButtonId;
 
 
     public EventsFragment() {
@@ -64,6 +82,18 @@ public class EventsFragment extends Fragment {
                 onLastMonth();
             });
         });
+
+        trainingsInfo = view.findViewById(R.id.trainingsInfo);
+        trainingsInfo.setVisibility(View.INVISIBLE);
+        trainingsInfo.setTextColor(Color.BLACK);
+
+        closeBtn = view.findViewById(R.id.closeBtn);
+        closeBtn.setVisibility(View.INVISIBLE);
+        closeBtn.setOnClickListener(v ->
+            getActivity().runOnUiThread(()->{
+                onCloseBtn();
+            })
+        );
 
         return view;
     }
@@ -106,7 +136,7 @@ public class EventsFragment extends Fragment {
         //function runs throw the rows - creating 7 new TextViews, setting the text and saving it to the linLay
         for (int y = 0; y < numWeekRows; y++){
             for (int x = 0; x < 7; x++){
-                TextView tv = new TextView(getContext());
+                CustomTextView tv = new CustomTextView(getContext());
                 tv.setText("W:" + String.valueOf(y+1) + ", D:" + String.valueOf(x+1));
                 tv.setWidth(pixels);
                 tv.setHeight(pixels);
@@ -120,12 +150,15 @@ public class EventsFragment extends Fragment {
                 params.weight = 1f;
                 tv.setLayoutParams(params);
 
+                //onclick listener for every TextView
+                tv.setOnClickListener(v -> {
+                    calendarCellOnClick(v);
+                });
+
                 calendarRowLinLays.get(y).addView(tv);
                 calendarCells.add(tv);
             }
         }
-
-
 
         isCalendarInit = true;
         //Calendar Rows/Cells set up completed
@@ -136,7 +169,34 @@ public class EventsFragment extends Fragment {
         calendarDate = LocalDate.now();
         updateCalendar();
 
+    }
 
+    private void calendarCellOnClick(View v){
+        CustomTextView selectedCell = null;
+        if (previousButtonId != 0){
+            for (CustomTextView ctv: calendarCells){
+                if (ctv.getId() == previousButtonId){
+                    ctv.setTextColor(Color.BLACK);
+                    break;
+                }
+            }
+        }
+
+        for (CustomTextView ctv: calendarCells){
+            if (ctv.getId() == v.getId()){
+                selectedCell = ctv;
+                previousButtonId = v.getId();
+                break;
+            }
+        }
+
+        closeBtn.setVisibility(View.VISIBLE);
+        if (selectedCell == null){
+            System.out.println("Unable to find selected cell.");
+        } else {
+            selectedCell.setTextColor(Color.RED);
+            updateTextView(selectedCell.getTrainings(), trainingsInfo);
+        }
     }
 
     private void updateCalendar(){
@@ -175,10 +235,22 @@ public class EventsFragment extends Fragment {
                 calendarCells.get(i).setVisibility(View.INVISIBLE);
             } else {
                 calendarCells.get(i).setVisibility(View.VISIBLE);
-                calendarCells.get(i).setText(String.valueOf(day));
+                calendarCells.get(i).setText(String.valueOf(day) + "\n");
+                calendarCells.get(i).setId(day);
                 day++;
             }
         }
+
+        //pull JSON training data
+        Thread updaterThread = new Thread( () -> {
+            try {
+                pullCalendarEvents();
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+        });
+        updaterThread.start();
+
 
     }
 
@@ -211,7 +283,104 @@ public class EventsFragment extends Fragment {
     ################################################################################################
      */
 
+    private void pullCalendarEvents() throws IOException, JSONException {
+        String month = calendarDate.getMonth().toString();
+        String year = String.valueOf(calendarDate.getYear());
 
+        URL url = new URL("http://megabytten.org/eutrcapp/trainings.json");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setConnectTimeout(10000);
+        con.setRequestProperty("month", month);
+        con.setRequestProperty("year", year);
+
+        int responseCode = con.getResponseCode();
+        System.out.println("POST Response Code :: " + responseCode);
+
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            BufferedReader br = new BufferedReader(new InputStreamReader((con.getInputStream())));
+            StringBuilder sb = new StringBuilder();
+            String output;
+            while ((output = br.readLine()) != null) {
+                sb.append(output);
+            }
+
+            //null check for response - if there are no trainings this month
+            if (sb.toString().equalsIgnoreCase("null")){
+                //return is null, no trainings for the month.
+                System.out.println("Trainings this month.json = null");
+                return;
+            }
+
+            JSONArray obj = new JSONArray(sb.toString());
+
+            ArrayList<Training> trainings = new ArrayList<>();
+            for (int i = 0; i < obj.length(); i++) {
+                JSONObject trainingJSON = obj.getJSONObject(i);
+                Training training = new Training(
+                        Integer.parseInt( trainingJSON.getString("date_day") ),
+                        Integer.parseInt(  trainingJSON.getString("date_month") ),
+                        Integer.parseInt(  trainingJSON.getString("date_year") ),
+                        trainingJSON.getString("team"),
+                        trainingJSON.getString("time")
+                );
+
+                //null checks for nullable attributes
+                if (!(trainingJSON.getString("location").equalsIgnoreCase("null"))){
+                    training.setLocation( trainingJSON.getString("location") );
+                }
+                if (!(trainingJSON.getString("drills").equalsIgnoreCase("null"))){
+                    training.setDrills( trainingJSON.getString("drills") );
+                }
+                if (!(trainingJSON.getString("attendance").equalsIgnoreCase("null"))){
+                    int attendance = Integer.parseInt( trainingJSON.getString("attendance") );
+                    training.setAttendance(attendance);
+                }
+
+                trainings.add(training);
+            }
+
+            getActivity().runOnUiThread(() -> {
+                try {
+                    updateCalendarEvents(obj, trainings);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            });
+
+
+        }
+    }
+
+
+    private void updateCalendarEvents(JSONArray obj, ArrayList<Training> trainings) throws JSONException {
+
+        for (Training training : trainings){
+            //this section obtains the int dateDay, and parses it into a string so that it may be formatted
+            int trainingDay = training.getDateDay();
+            String trainingDayStr = String.valueOf(trainingDay);
+            StringBuilder editString = new StringBuilder(trainingDayStr);
+            if (editString.charAt(0) == '0'){
+                editString.deleteCharAt(0);
+            }
+
+            int formattedDateId = Integer.parseInt(editString.toString());
+            for (CustomTextView tv: calendarCells){
+                if (tv.getId() == formattedDateId){
+                    //updates Display String to show training
+                    String currentText = tv.getText().toString();
+                    StringBuilder newText = new StringBuilder(currentText);
+                    newText.append(training.getTeam().toUpperCase());
+                    newText.append("\n");
+                    tv.setText(newText.toString());
+
+                    //updates CustomTextView by adding training to it
+                    tv.addTraining(training);
+                    break;
+                }
+            }
+
+        }
+    }
 
 
     /*
@@ -223,14 +392,56 @@ public class EventsFragment extends Fragment {
      */
 
     public void onNextMonth(){
+        onCloseBtn();
         calendarDate = calendarDate.plusMonths(1);
         updateCalendar();
     }
 
 
-    public void onLastMonth(){
+    public void onLastMonth() {
+        onCloseBtn();
         calendarDate = calendarDate.minusMonths(1);
         updateCalendar();
+    }
+
+
+    public void updateTextView(ArrayList<Training> trainings, TextView trainingsInfo){
+        if (trainings.size() == 0){
+            trainingsInfo.setText("No trainings/matches on selected day.");
+            trainingsInfo.setVisibility(View.VISIBLE);
+        } else {
+            trainingsInfo.setText("");
+            trainingsInfo.setVisibility(View.VISIBLE);
+            for (int x = 0; x < trainings.size(); x++){
+                System.out.println("Updating trainingsInfo, counter = " + x);
+                System.out.println("Trainings on selected day: " + trainings);
+                Training training = trainings.get(x);
+                StringBuilder currentText = new StringBuilder(trainingsInfo.getText());
+                currentText.append(training.getTeam().toUpperCase() + "\n");
+                currentText.append(training.getFormattedDate() + "\n");
+                currentText.append("\nTime: " + training.getTime());
+                currentText.append("\nLocation: " + training.getLocation());
+                currentText.append("\nDrills: " + training.getDrills() + "\n\n\n");
+
+                trainingsInfo.setText(currentText.toString());
+
+            }
+        }
+
+
+    }
+
+    private void onCloseBtn(){
+        trainingsInfo.setText("");
+        trainingsInfo.setVisibility(View.INVISIBLE);
+        closeBtn.setVisibility(View.INVISIBLE);
+
+        for (CustomTextView ctv: calendarCells){
+            if (ctv.getId() == previousButtonId){
+                ctv.setTextColor(Color.BLACK);
+                break;
+            }
+        }
     }
 
 }

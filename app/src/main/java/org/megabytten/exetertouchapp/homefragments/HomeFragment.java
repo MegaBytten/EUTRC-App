@@ -33,13 +33,14 @@ public class HomeFragment extends Fragment {
     User user;
     View view;
 
-    static JSONObject hpTrainingJSON;
-    static JSONObject dvTrainingJSON;
-    static JSONObject cbTrainingJSON;
+    JSONObject hpTrainingJSON;
+    JSONObject dvTrainingJSON;
+    JSONObject cbTrainingJSON;
 
-    static boolean jsonPulled = false;
+    boolean jsonPulled;
 
     public static HomeFragment getInstance(){
+        System.out.println("HomeFrag.getInst called");
         if (homeFragment == null){
             System.out.println("Initializing homeFragment.");
             homeFragment = new HomeFragment();
@@ -50,25 +51,13 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //pull training info async - if hasnt been pulled before!
-        if (!jsonPulled){
-            Thread newVerifThread = new Thread(() -> {
-                System.out.println("New Thread launched. Pulling Training JSON then Loading it.");
-                try {
-                    pullTrainingJSON();
-                    jsonPulled = true;
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                }
-            });
-            newVerifThread.start();
-        }
-
-
-
     }
 
+
+// TODO: 30/7/22 Add User available/unavailable to next training sessions
+// TODO: 30/7/22 add coach's 'ADD TRAINING' button
+//      --> launches new fragment, survey to take in all required details (most inputs must be in specific format or length)
+//      --> submit + back button (maybe even save draft?) : submit sends to database after input checks
 
     @Nullable
     @Override
@@ -82,15 +71,21 @@ public class HomeFragment extends Fragment {
         } else {
             welcomeTxt.setText("Welcome player " + User.getInstance().getFirstName());
         }
-        //wait for JSON Pull to update UI
-        Thread newVerifThread = new Thread(() -> {
-            while(!jsonPulled){
+
+        //check if JSON has been pulled - if not, first time set up, if yes, just load
+        //pull training info async - if hasnt been pulled before!
+        if (!jsonPulled){
+            Thread newVerifThread = new Thread(() -> {
+                System.out.println("New Thread launched. Pulling Training JSON then Loading it.");
                 try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
+                    pullTrainingJSON();
+                    jsonPulled = true;
+                } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
-            }
+            });
+            newVerifThread.start();
+        } else {
 
             getActivity().runOnUiThread(() -> {
                 try {
@@ -99,13 +94,7 @@ public class HomeFragment extends Fragment {
                     e.printStackTrace();
                 }
             });
-        });
-        newVerifThread.start();
-
-// TODO: 30/7/22 Add User available/unavailable to next training sessions
-// TODO: 30/7/22 add coach's 'ADD TRAINING' button
-//      --> launches new fragment, survey to take in all required details (most inputs must be in specific format or length)
-//      --> submit + back button (maybe even save draft?) : submit sends to database after input checks
+        }
         //do communal stuff
 
         //do coach/player specific stuff
@@ -149,6 +138,14 @@ public class HomeFragment extends Fragment {
             dvTrainingJSON = obj.getJSONObject("dvTraining");
             cbTrainingJSON = obj.getJSONObject("cbTraining");
             con.disconnect();
+
+            getActivity().runOnUiThread(() -> {
+                try {
+                    loadTrainingInfo();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            });
         }
     }
 

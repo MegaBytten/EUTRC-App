@@ -1,5 +1,6 @@
 package org.megabytten.exetertouchapp;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -50,14 +51,13 @@ public class HomeActivity extends AppCompatActivity {
             return true;
         });
 
-        //instead of creating a new home fragment everytime, gets the static instance of homeFrag
-        replaceFragment(new HomeFragment());
+        //programmatically 'presses' the home button upon loading
         BottomNavigationView homeNav = findViewById(R.id.bottomNavigationView);
         homeNav.setSelectedItemId(R.id.homeNavHomeButton);
     }
 
 
-    private void replaceFragment(Fragment fragment){
+    public void replaceFragment(Fragment fragment){
         /*
         This function works to switch the frame (fragment) above the navigation bar
         when buttons on the navigation bar are tapped
@@ -68,6 +68,10 @@ public class HomeActivity extends AppCompatActivity {
         fragmentTransaction.setReorderingAllowed(true);
         fragmentTransaction.addToBackStack("BackStack");
         fragmentTransaction.commit();
+    }
+
+    public static Activity getActivity(){
+        return getActivity();
     }
 
 }

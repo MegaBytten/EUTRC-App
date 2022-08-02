@@ -18,7 +18,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.sql.ResultSet;
 
 public class LauncherActivity extends AppCompatActivity {
 
@@ -78,6 +77,7 @@ public class LauncherActivity extends AppCompatActivity {
         //establishes HTTP connection with URL via the URL object, "obj"
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
+        con.setConnectTimeout(10000);
 
         //post method set up!
         con.setDoOutput(true);
@@ -94,9 +94,10 @@ public class LauncherActivity extends AppCompatActivity {
         os.close();
 
         int responseCode = con.getResponseCode();
+
         System.out.println("POST Response Code :: " + responseCode);
 
-        if (responseCode == HttpURLConnection.HTTP_OK) { //success
+        if (responseCode == 200) { //success
             System.out.println("User successfully logged in!");
             userInit(email, password);
             checkVerification();
@@ -132,6 +133,7 @@ public class LauncherActivity extends AppCompatActivity {
         //establishes HTTP connection with URL via the URL object, "obj"
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
+        con.setConnectTimeout(10000);
 
         //post method set up!
         con.setDoOutput(true);
@@ -178,8 +180,6 @@ public class LauncherActivity extends AppCompatActivity {
         String charset = java.nio.charset.StandardCharsets.UTF_8.name();
         URL obj = new URL("http://megabytten.org/eutrcapp/checkverif");
 
-
-
         //sets the encoded query
         String query = String.format("email=%s&password=%s"
                 , URLEncoder.encode(email, charset)
@@ -192,6 +192,7 @@ public class LauncherActivity extends AppCompatActivity {
         //establishes HTTP connection with URL via the URL object, "obj"
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
+        con.setConnectTimeout(10000);
 
         //post method set up!
         con.setDoOutput(true);
@@ -231,9 +232,6 @@ public class LauncherActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }
-
-//
-
 
     }
 

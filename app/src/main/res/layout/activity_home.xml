@@ -14,9 +14,9 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentContainerView"
-            android:name="org.megabytten.exetertouchapp.homefragments.HomeFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+<!--          android:name="org.megabytten.exetertouchapp.homefragments.HomeFragment"  -->
 
     </FrameLayout>
 
