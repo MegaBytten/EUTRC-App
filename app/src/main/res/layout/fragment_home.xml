@@ -201,7 +201,7 @@
 
             </LinearLayout>
 
-<!--            THIS IS BEGINING OF DEV SECTION-->
+<!--            THIS IS BEGINING OF DV SECTION-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -560,18 +560,20 @@
                     android:gravity="center">
 
                     <Button
+                        android:id="@+id/addTrainingBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Add Training"
                         android:backgroundTint="#107F33"
-                        android:layout_margin="10dp"/>
+                        android:layout_margin="10dp" />
 
                     <Button
+                        android:id="@+id/deleteTrainingBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Delete Training"
                         android:backgroundTint="#AB1B16"
-                        android:layout_margin="10dp"/>
+                        android:layout_margin="10dp" />
 
                 </LinearLayout>
 

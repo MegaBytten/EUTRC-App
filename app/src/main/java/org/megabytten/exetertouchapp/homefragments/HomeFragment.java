@@ -4,18 +4,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.megabytten.exetertouchapp.LauncherActivity;
+import org.megabytten.exetertouchapp.HomeActivity;
 import org.megabytten.exetertouchapp.R;
 import org.megabytten.exetertouchapp.Training;
 import org.megabytten.exetertouchapp.User;
@@ -24,7 +24,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class HomeFragment extends Fragment {
@@ -96,6 +95,18 @@ public class HomeFragment extends Fragment {
 
         if (user.isCoach()){
             //coach layout init
+            Button addTrainingBtn = view.findViewById(R.id.addTrainingBtn);
+            Button deleteTrainingBtn = view.findViewById(R.id.deleteTrainingBtn);
+
+            addTrainingBtn.setOnClickListener(v -> {
+                getActivity().runOnUiThread(() -> {
+                    onAddTrainingBtn();
+                });
+            });
+
+            deleteTrainingBtn.setOnClickListener(v -> {
+
+            });
 
         } else {
             //player layout init
@@ -224,14 +235,13 @@ public class HomeFragment extends Fragment {
         }
     }
 
-// todo finish coach setup and buttons!!
-// TODO: 30/7/22 add coach's 'ADD TRAINING' button
-//      --> launches new fragment, survey to take in all required details (most inputs must be in specific format or length)
-//      --> submit + back button (maybe even save draft?) : submit sends to database after input checks
-    private void coachSetup(){
-        //make gone elements visible!
-        //eg add training button! --> launches new fragment which asks for details and submits to mg.org
+    public void onAddTrainingBtn(){
+        FragmentTransaction fragmentTransaction = getActivity()
+                .getSupportFragmentManager().beginTransaction();
+        HomeActivity.replaceFragmentExternal(fragmentTransaction, CreateTrainingFragment.getInstance());
+    }
 
+    public void onDeleteTrainingBtn(){
 
     }
 }

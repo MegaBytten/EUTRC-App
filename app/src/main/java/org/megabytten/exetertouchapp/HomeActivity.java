@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.megabytten.exetertouchapp.databinding.ActivityHomeBinding;
+import org.megabytten.exetertouchapp.homefragments.CreateTrainingFragment;
 import org.megabytten.exetertouchapp.homefragments.EventsFragment;
 import org.megabytten.exetertouchapp.homefragments.HomeFragment;
 import org.megabytten.exetertouchapp.homefragments.ProfileFragment;
@@ -70,8 +71,9 @@ public class HomeActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    public static Activity getActivity(){
-        return getActivity();
+    public static void replaceFragmentExternal(FragmentTransaction fragmentTransaction, Fragment fragment){
+        fragmentTransaction.replace(R.id.fragmentContainerView, fragment);
+        fragmentTransaction.commit();
     }
 
 }

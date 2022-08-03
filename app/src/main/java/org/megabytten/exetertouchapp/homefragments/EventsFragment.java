@@ -340,7 +340,7 @@ public class EventsFragment extends Fragment {
 
             getActivity().runOnUiThread(() -> {
                 try {
-                    updateCalendarEvents(obj, trainings);
+                    updateCalendarEvents(trainings);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -350,7 +350,7 @@ public class EventsFragment extends Fragment {
         }
     }
 
-    private void updateCalendarEvents(JSONArray obj, ArrayList<Training> trainings) throws JSONException {
+    private void updateCalendarEvents(ArrayList<Training> trainings) throws JSONException {
 
         for (Training training : trainings){
             //this section obtains the int dateDay, and parses it into a string so that it may be formatted
