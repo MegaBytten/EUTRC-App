@@ -51,6 +51,10 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    // TODO: 4/8/22
+//      - RSVP buttons dont currently work!
+//      - dont appear upon training
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -91,7 +95,7 @@ public class HomeFragment extends Fragment {
             });
 
             deleteTrainingBtn.setOnClickListener(v -> {
-
+                //TODO - delete button functionality
             });
 
         } else {

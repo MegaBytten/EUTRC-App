@@ -112,7 +112,7 @@ public class CreateTrainingFragment extends Fragment {
             String drills = drillsInput.getText().toString();
 
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-            HomeActivity.replaceFragmentExternal(fragmentTransaction, ConfirmActionFragment.newInstance(team, formattedDate, time, location, drills, true));
+            HomeActivity.replaceFragmentExternal(fragmentTransaction, ConfirmActionFragment.createConfirmAction_for_SubmitTraining(team, formattedDate, time, location, drills, true));
         });
 
         Button backButton = view.findViewById(R.id.backBtn);

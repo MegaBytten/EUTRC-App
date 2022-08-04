@@ -16,12 +16,6 @@ import org.megabytten.exetertouchapp.R;
 import org.megabytten.exetertouchapp.utils.User;
 
 public class ProfileFragment extends Fragment {
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    private String mParam1;
-//    private String mParam2;
-
 
     private static ProfileFragment profileFragment;
 
@@ -39,10 +33,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -50,6 +40,8 @@ public class ProfileFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         //update all UI features
+        TextView passwordTxt = view.findViewById(R.id.passwordTxt);
+        passwordTxt.setText(User.getInstance().getPassword());
 
         TextView userTxt = view.findViewById(R.id.userTxt);
         if (User.getInstance().isCoach()){
@@ -91,7 +83,6 @@ public class ProfileFragment extends Fragment {
         Button viewPswdBtn = view.findViewById(R.id.viewPswdBtn);
         viewPswdBtn.setOnClickListener((v) -> {
             TextView passwordTitle = view.findViewById(R.id.passwordTitle);
-            TextView passwordTxt = view.findViewById(R.id.passwordTxt);
             if (isPswdHidden){
                 passwordTitle.setVisibility(View.VISIBLE);
                 passwordTxt.setVisibility(View.VISIBLE);
@@ -105,16 +96,16 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        Button changePswdBtn = view.findViewById(R.id.editDetails);
-        changePswdBtn.setOnClickListener((v) -> {
-            // TODO: 4/8/22 Functionality!
-            //do change password stuff.
+        Button editDetailsBtn = view.findViewById(R.id.editDetails);
+        editDetailsBtn.setOnClickListener((v) -> {
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            HomeActivity.replaceFragmentExternal(fragmentTransaction, new UpdateDetailsFragment());
         });
 
         TextView deleteAccount = view.findViewById(R.id.deleteAccount);
         deleteAccount.setOnClickListener((v) -> {
-            // TODO: 4/8/22 functionality!
-            //do delete acc stuffs
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            HomeActivity.replaceFragmentExternal(fragmentTransaction, ConfirmActionFragment.createConfirmAction_for_DeleteAccount());
         });
 
         return view;
