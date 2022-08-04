@@ -17,8 +17,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.megabytten.exetertouchapp.HomeActivity;
 import org.megabytten.exetertouchapp.R;
-import org.megabytten.exetertouchapp.Training;
-import org.megabytten.exetertouchapp.User;
+import org.megabytten.exetertouchapp.utils.Training;
+import org.megabytten.exetertouchapp.utils.User;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,7 +36,6 @@ public class HomeFragment extends Fragment {
 
     //Training-pulling specific data/variables
     Training hpTraining, dvTraining, cbTraining;
-    static boolean jsonPulled; //needs to be static!!
 
 
     public static HomeFragment getInstance(){
@@ -65,29 +64,16 @@ public class HomeFragment extends Fragment {
             welcomeTxt.setText("Welcome player " + User.getInstance().getFirstName());
         }
 
-        //check if JSON has been pulled - if not, first time set up, if yes, just load
-        //pull training info async - if hasnt been pulled before!
-        if (!jsonPulled){
-            Thread newVerifThread = new Thread(() -> {
-                System.out.println("New Thread launched. Pulling Training JSON then Loading it.");
-                try {
-                    jsonPulled = true;
-                    pullTrainingJSON();
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                }
-            });
-            newVerifThread.start();
-        } else {
-            //this needs to occur or textviews will display default information from .xml!
-            getActivity().runOnUiThread(() -> {
-                try {
-                    loadTrainingInfo();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
+        //updates upcoming trainings!
+        Thread newVerifThread = new Thread(() -> {
+            System.out.println("New Thread launched. Pulling Training JSON then Loading it.");
+            try {
+                pullTrainingJSON();
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+        });
+        newVerifThread.start();
 
         //do communal stuff
 
@@ -242,6 +228,9 @@ public class HomeFragment extends Fragment {
     }
 
     public void onDeleteTrainingBtn(){
-
+        // TODO: 4/8/22
+//          - ADD functionality to delete training button!
+//          - Launch a deleteTraining fragment view, which displays all trainings
+//          - OR allows entering the date, team and time of date, which then searches through the DB and deletes it
     }
 }

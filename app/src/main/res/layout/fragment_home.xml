@@ -49,7 +49,7 @@
                 <ScrollView
                     android:id="@+id/hpTrainingContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="wrap_content"
                     android:padding="10dp">
                     <!-- This layout holds all child components and stacks them veritcally -->
                     <LinearLayout
@@ -222,7 +222,7 @@
                 <ScrollView
                     android:id="@+id/dvTrainingContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="wrap_content"
                     android:padding="10dp">
                     <!-- This layout holds all child components and stacks them veritcally -->
                     <LinearLayout
@@ -389,7 +389,7 @@
                 <ScrollView
                     android:id="@+id/cbTrainingContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="wrap_content"
                     android:padding="10dp">
                     <!-- This layout holds all child components and stacks them veritcally -->
                     <LinearLayout

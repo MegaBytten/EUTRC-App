@@ -1,4 +1,4 @@
-package org.megabytten.exetertouchapp;
+package org.megabytten.exetertouchapp.utils;
 
 public class User {
 

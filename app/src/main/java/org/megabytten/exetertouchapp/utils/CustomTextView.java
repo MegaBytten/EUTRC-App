@@ -1,11 +1,8 @@
-package org.megabytten.exetertouchapp;
+package org.megabytten.exetertouchapp.utils;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.ContextWrapper;
-import android.view.View;
 
-import org.megabytten.exetertouchapp.homefragments.EventsFragment;
+import org.megabytten.exetertouchapp.utils.Training;
 
 import java.util.ArrayList;
 

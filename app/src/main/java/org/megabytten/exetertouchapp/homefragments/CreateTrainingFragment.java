@@ -18,7 +18,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import org.megabytten.exetertouchapp.HomeActivity;
 import org.megabytten.exetertouchapp.R;
-import org.megabytten.exetertouchapp.SignupActivity;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -46,7 +45,6 @@ public class CreateTrainingFragment extends Fragment {
     }
 
     private static final String ARG_PARAM_TEAM = "paramTeam";
-    private static final String ARG_PARAM_DATE = "paramDate";
     private static final String ARG_PARAM_TIME = "paramTime";
     private static final String ARG_PARAM_LOCATION = "paramLocation";
     private static final String ARG_PARAM_DRILLS = "paramDrills";

@@ -1,4 +1,4 @@
-package org.megabytten.exetertouchapp;
+package org.megabytten.exetertouchapp.utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,9 +34,9 @@ public class Training {
         this.dateYear = Integer.parseInt( jsonObject.getString("date_year") );
         this.attendance = Integer.parseInt( jsonObject.getString("date_year") );
         this.team = jsonObject.getString("team");
-        this.team = jsonObject.getString("location");
-        this.team = jsonObject.getString("drills");
-        this.team = jsonObject.getString("time");
+        this.location = jsonObject.getString("location");
+        this.drills = jsonObject.getString("drills");
+        this.time = jsonObject.getString("time");
     }
 
     public int getDateDay() {

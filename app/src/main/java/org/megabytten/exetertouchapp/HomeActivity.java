@@ -1,6 +1,5 @@
 package org.megabytten.exetertouchapp;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,10 +10,10 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.megabytten.exetertouchapp.databinding.ActivityHomeBinding;
-import org.megabytten.exetertouchapp.homefragments.CreateTrainingFragment;
 import org.megabytten.exetertouchapp.homefragments.EventsFragment;
 import org.megabytten.exetertouchapp.homefragments.HomeFragment;
 import org.megabytten.exetertouchapp.homefragments.ProfileFragment;
+import org.megabytten.exetertouchapp.utils.User;
 
 public class HomeActivity extends AppCompatActivity {
 

@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.megabytten.exetertouchapp.utils.User;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;

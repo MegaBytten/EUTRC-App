@@ -15,9 +15,9 @@ import androidx.fragment.app.Fragment;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.megabytten.exetertouchapp.CustomTextView;
+import org.megabytten.exetertouchapp.utils.CustomTextView;
 import org.megabytten.exetertouchapp.R;
-import org.megabytten.exetertouchapp.Training;
+import org.megabytten.exetertouchapp.utils.Training;
 
 import java.io.BufferedReader;
 import java.io.IOException;

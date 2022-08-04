@@ -17,6 +17,16 @@ import org.megabytten.exetertouchapp.R;
  */
 public class ProfileFragment extends Fragment {
 
+    private static ProfileFragment profileFragment;
+
+    public static ProfileFragment getInstance(){
+        if (profileFragment == null){
+            System.out.println("Initialising profileFragment");
+            profileFragment = new ProfileFragment();
+        }
+        return profileFragment;
+    }
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
