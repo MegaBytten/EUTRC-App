@@ -1,23 +1,32 @@
 package org.megabytten.exetertouchapp.homefragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import org.megabytten.exetertouchapp.HomeActivity;
 import org.megabytten.exetertouchapp.R;
+import org.megabytten.exetertouchapp.utils.User;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ProfileFragment extends Fragment {
+//    private static final String ARG_PARAM1 = "param1";
+//    private static final String ARG_PARAM2 = "param2";
+//
+//    private String mParam1;
+//    private String mParam2;
+
 
     private static ProfileFragment profileFragment;
+
+    View view;
+    boolean isPswdHidden = true;
 
     public static ProfileFragment getInstance(){
         if (profileFragment == null){
@@ -27,50 +36,87 @@ public class ProfileFragment extends Fragment {
         return profileFragment;
     }
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public ProfileFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+//            mParam1 = getArguments().getString(ARG_PARAM1);
+//            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        //update all UI features
+
+        TextView userTxt = view.findViewById(R.id.userTxt);
+        if (User.getInstance().isCoach()){
+            userTxt.setText("Coach Profile");
+        } else {
+            userTxt.setText("Player Profile");
+        }
+
+        ImageView imageView = view.findViewById(R.id.imageView);
+        try {
+            if (User.getInstance().getIcon() == 1){
+                imageView.setImageResource(R.drawable.user_icon_1);
+            } else if (User.getInstance().getIcon() == 2){
+                imageView.setImageResource(R.drawable.user_icon_2);
+            } else if (User.getInstance().getIcon() == 3){
+                imageView.setImageResource(R.drawable.user_icon_3);
+            }  else if (User.getInstance().getIcon() == 4){
+                imageView.setImageResource(R.drawable.user_icon_4);
+            } else {
+                throw new Exception("No image for that icon int!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        imageView.setOnClickListener((v) -> {
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            HomeActivity.replaceFragmentExternal(fragmentTransaction, new UpdateIconFragment());
+        });
+
+        TextView nameTxt = view.findViewById(R.id.nameTxt);
+        nameTxt.setText(User.getInstance().getFirstName() + " " + User.getInstance().getLastName());
+
+        TextView emailTxt = view.findViewById(R.id.emailTxt);
+        emailTxt.setText(User.getInstance().getEmail());
+
+        TextView phoneNumberTxt = view.findViewById(R.id.phoneNumberTxt);
+        phoneNumberTxt.setText(User.getInstance().getPhoneNumber());
+
+        Button viewPswdBtn = view.findViewById(R.id.viewPswdBtn);
+        viewPswdBtn.setOnClickListener((v) -> {
+            TextView passwordTitle = view.findViewById(R.id.passwordTitle);
+            TextView passwordTxt = view.findViewById(R.id.passwordTxt);
+            if (isPswdHidden){
+                passwordTitle.setVisibility(View.VISIBLE);
+                passwordTxt.setVisibility(View.VISIBLE);
+                viewPswdBtn.setText("Hide Password");
+                isPswdHidden = false;
+            } else {
+                passwordTitle.setVisibility(View.GONE);
+                passwordTxt.setVisibility(View.GONE);
+                viewPswdBtn.setText("View Password");
+                isPswdHidden = true;
+            }
+        });
+
+        Button changePswdBtn = view.findViewById(R.id.editDetails);
+        changePswdBtn.setOnClickListener((v) -> {
+            // TODO: 4/8/22 Functionality!
+            //do change password stuff.
+        });
+
+        TextView deleteAccount = view.findViewById(R.id.deleteAccount);
+        deleteAccount.setOnClickListener((v) -> {
+            // TODO: 4/8/22 functionality!
+            //do delete acc stuffs
+        });
+
+        return view;
     }
 }

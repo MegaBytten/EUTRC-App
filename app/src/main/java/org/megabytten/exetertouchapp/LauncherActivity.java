@@ -170,7 +170,7 @@ public class LauncherActivity extends AppCompatActivity {
             }
 
             //User.createInstance(email, firstName, lastName, phoneNumber, password, coach);
-            User.createInstance(email, info[0], info[1], info[2], password, isCoach);
+            User.createInstance(email, info[0], info[1], info[2], password, isCoach, Integer.parseInt(info[4]));
             System.out.println(User.getInstance().getFirstName() + User.getInstance().getLastName());
         }
     }

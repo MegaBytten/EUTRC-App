@@ -77,7 +77,7 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
-        User.createInstance(email, firstName, lastName, phoneNumber, passwordAttempt1, false);
+        User.createInstance(email, firstName, lastName, phoneNumber, passwordAttempt1, false, 4);
 
         Thread newUserThread = new Thread(() -> { //this is syntax for a lambda function!
             System.out.println("New Thread launched.");
