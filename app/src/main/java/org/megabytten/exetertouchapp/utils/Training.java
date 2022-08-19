@@ -5,15 +5,16 @@ import org.json.JSONObject;
 
 public class Training {
 
-    private int dateDay, dateMonth, dateYear, attendance;
+    private int dateDay, dateMonth, dateYear, attendance, id;
     private String team, location, drills, time;
 
-    public Training(int dateDay, int dateMonth, int dateYear, String team, String time) {
+    public Training(int dateDay, int dateMonth, int dateYear, int id, String team, String time) {
         this.dateDay = dateDay;
         this.dateMonth = dateMonth;
         this.dateYear = dateYear;
         this.team = team;
         this.time = time;
+        this.id = id;
     }
 
     public Training(JSONObject jsonObject) throws Exception {
@@ -22,7 +23,7 @@ public class Training {
         There is still an exception thrown to ensure safety, however it should only be called after checking hasTraining()
          */
 
-        System.out.println("Creating new Training from jsonObject: " + jsonObject);
+        System.out.println("Creating new Training from jsonObject: " + jsonObject.toString());
 
         String date_day = jsonObject.getString("date_day");
         if ( date_day.equalsIgnoreCase("none") ){
@@ -37,6 +38,7 @@ public class Training {
         this.location = jsonObject.getString("location");
         this.drills = jsonObject.getString("drills");
         this.time = jsonObject.getString("time");
+        this.id = jsonObject.getInt("id");
     }
 
     public int getDateDay() {
@@ -103,8 +105,26 @@ public class Training {
         this.time = time;
     }
 
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public int getId(){
+        return this.id;
+    }
+
     public String getFormattedDate(){
-        String formattedDate = dateDay + "/" + dateMonth + "/" + dateYear;
+        String formattedDay = String.valueOf(dateDay);
+        if (dateDay < 10){ // only 1 digit!
+            formattedDay = "0" + dateDay;
+        }
+
+        String formattedMonth = String.valueOf(dateMonth);
+        if (dateMonth < 10){
+            formattedMonth = "0" + dateMonth;
+        }
+
+        String formattedDate = formattedDay + "/" + formattedMonth + "/" + dateYear;
         return formattedDate;
     }
 

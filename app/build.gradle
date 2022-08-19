@@ -29,6 +29,13 @@ android {
     buildFeatures {
         viewBinding true
     }
+    sourceSets {
+        main {
+            res {
+                srcDirs 'src/main/res', 'src/main/res/myresources/fragments', 'src/main/res/myresources/listitems'
+            }
+        }
+    }
 }
 
 dependencies {

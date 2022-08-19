@@ -180,8 +180,7 @@
                 android:id="@+id/hpRSVPContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone">
+                android:layout_gravity="center">
 
                 <Button
                     android:id="@+id/hpUserAvailableBtn"
@@ -347,8 +346,7 @@
                 android:id="@+id/dvRSVPContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone">
+                android:layout_gravity="center">
 
                 <Button
                     android:id="@+id/dvUserAvailableBtn"
@@ -514,8 +512,7 @@
                 android:id="@+id/cbRSVPContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone">
+                android:layout_gravity="center">
 
                 <Button
                     android:id="@+id/cbUserAvailableBtn"
@@ -571,7 +568,7 @@
                         android:id="@+id/deleteTrainingBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Delete Training"
+                        android:text="Modify Training"
                         android:backgroundTint="#AB1B16"
                         android:layout_margin="10dp" />
 

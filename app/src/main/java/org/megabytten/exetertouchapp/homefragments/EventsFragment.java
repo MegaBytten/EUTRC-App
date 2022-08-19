@@ -70,15 +70,11 @@ public class EventsFragment extends Fragment {
         });
 
         view.findViewById(R.id.nextMonthBtn).setOnClickListener(v -> {
-            getActivity().runOnUiThread( () -> {
-                onNextMonth();
-            });
+            getActivity().runOnUiThread(this::onNextMonth);
         });
 
         view.findViewById(R.id.lastMonthBtn).setOnClickListener(v -> {
-            getActivity().runOnUiThread( () -> {
-                onLastMonth();
-            });
+            getActivity().runOnUiThread(this::onLastMonth);
         });
 
         trainingsInfoTitle = view.findViewById(R.id.trainingInfoTitle);
@@ -91,9 +87,7 @@ public class EventsFragment extends Fragment {
         closeBtn = view.findViewById(R.id.closeBtn);
         closeBtn.setVisibility(View.INVISIBLE);
         closeBtn.setOnClickListener(v ->
-            getActivity().runOnUiThread(()->{
-                onCloseBtn();
-            })
+            getActivity().runOnUiThread(this::onCloseBtn)
         );
 
         return view;
@@ -114,8 +108,8 @@ public class EventsFragment extends Fragment {
 
         int numWeekRows = 6;
 
-        //This loop creates 6 linear layouts (rows) - one for each week of the month
-        //all these lin layouts are then stored in calendarRowLinLays
+        //This loop creates 6 linear myresources (rows) - one for each week of the month
+        //all these lin myresources are then stored in calendarRowLinLays
         for (int i = 0; i < numWeekRows; i++){
             LinearLayout linLay = new LinearLayout(getContext());
             linLay.setOrientation(LinearLayout.HORIZONTAL);
@@ -136,7 +130,7 @@ public class EventsFragment extends Fragment {
         for (int y = 0; y < numWeekRows; y++){
             for (int x = 0; x < 7; x++){
                 CustomTextView tv = new CustomTextView(getContext());
-                tv.setText("W:" + String.valueOf(y+1) + ", D:" + String.valueOf(x+1));
+                tv.setText("W:" + (y + 1) + ", D:" + (x + 1));
                 tv.setWidth(pixels);
                 tv.setHeight(pixels);
                 tv.setBackgroundColor(Color.WHITE);
@@ -234,7 +228,7 @@ public class EventsFragment extends Fragment {
                 calendarCells.get(i).setVisibility(View.INVISIBLE);
             } else {
                 calendarCells.get(i).setVisibility(View.VISIBLE);
-                calendarCells.get(i).setText(String.valueOf(day) + "\n");
+                calendarCells.get(i).setText(day + "\n");
                 calendarCells.get(i).setId(day);
                 day++;
             }
@@ -291,9 +285,10 @@ public class EventsFragment extends Fragment {
         con.setConnectTimeout(10000);
         con.setRequestProperty("month", month);
         con.setRequestProperty("year", year);
+        con.setRequestProperty("request", "calendar");
 
         int responseCode = con.getResponseCode();
-        System.out.println("POST Response Code :: " + responseCode);
+        System.out.println("GET Response Code :: " + responseCode);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             BufferedReader br = new BufferedReader(new InputStreamReader((con.getInputStream())));
@@ -305,37 +300,32 @@ public class EventsFragment extends Fragment {
 
             //null check for response - if there are no trainings this month
             if (sb.toString().equalsIgnoreCase("null")){
-                //return is null, no trainings for the month.
-                System.out.println("Trainings this month.json = null");
+                //return is null, no trainings!
+                System.out.println("Trainings.json == null");
                 return;
             }
 
+            //This section obtains the JSONArray which contains all trainings in JSONObject format from the server
+            //it loops through the Array, creating new Training objects from the JSONObjects and saving them to an ArrayList
+            //this arrayList containing the trainings then gets passed to updateCalendarEvents which updates the UI for all trainings.
             JSONArray obj = new JSONArray(sb.toString());
-
             ArrayList<Training> trainings = new ArrayList<>();
             for (int i = 0; i < obj.length(); i++) {
                 JSONObject trainingJSON = obj.getJSONObject(i);
-                Training training = new Training(
-                        Integer.parseInt( trainingJSON.getString("date_day") ),
-                        Integer.parseInt(  trainingJSON.getString("date_month") ),
-                        Integer.parseInt(  trainingJSON.getString("date_year") ),
-                        trainingJSON.getString("team"),
-                        trainingJSON.getString("time")
-                );
 
-                //null checks for nullable attributes
-                if (!(trainingJSON.getString("location").equalsIgnoreCase("null"))){
-                    training.setLocation( trainingJSON.getString("location") );
-                }
-                if (!(trainingJSON.getString("drills").equalsIgnoreCase("null"))){
-                    training.setDrills( trainingJSON.getString("drills") );
-                }
-                if (!(trainingJSON.getString("attendance").equalsIgnoreCase("null"))){
-                    int attendance = Integer.parseInt( trainingJSON.getString("attendance") );
-                    training.setAttendance(attendance);
+                Training training = null;
+                if (Training.jsonHasTraining(trainingJSON)){
+                    System.out.println("Events fragment: JSONObject in JSONArray has Training! Creating new training object from JSONObject.");
+                    try {
+                        training = new Training(trainingJSON);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
-                trainings.add(training);
+                if (training != null){
+                    trainings.add(training);
+                }
             }
 
             getActivity().runOnUiThread(() -> {

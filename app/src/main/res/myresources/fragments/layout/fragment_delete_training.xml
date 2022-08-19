@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".homefragments.DeleteTrainingFragment"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+
+    <TextView
+        android:id="@+id/titleTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Training to Modify"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_gravity="center"
+        android:textAlignment="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:queryHint="dd/mm/yyyy, team, time, or ID"
+            android:iconifiedByDefault="false"/>
+
+        <ImageButton
+            android:id="@+id/filterBtn"
+            android:clickable="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/ic_filter_foreground" />
+
+
+
+    </LinearLayout>
+
+    <!-- this section holds the invisible checkbox for filtering options -->
+    <LinearLayout
+        android:id="@+id/filterSettingsLinLay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <CheckBox
+            android:id="@+id/filteringOptionID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="ID"
+            android:checked="true"/>
+
+        <CheckBox
+            android:id="@+id/filteringOptionDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Date"
+            android:checked="true"/>
+
+        <CheckBox
+            android:id="@+id/filteringOptionTeam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Team"
+            android:checked="true"/>
+
+        <CheckBox
+            android:id="@+id/filteringOptionTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Time"
+            android:checked="true"/>
+
+    </LinearLayout>
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginTop="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- ADD GREYED OUT, "activated" once user selects a training @clickable textviews -->
+        <Button
+            android:id="@+id/editBtn"
+            android:backgroundTint="#00570A"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit training"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="50"
+            android:layout_gravity="center"
+            android:textSize="13dp"/>
+
+        <Button
+            android:id="@+id/deleteBtn"
+            android:backgroundTint="#700000"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete training"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="50"
+            android:layout_gravity="center"
+            android:textSize="13dp"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/backBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Back"
+        android:backgroundTint="#B9B9B9"
+        android:layout_marginTop="10dp"/>
+
+</LinearLayout>
