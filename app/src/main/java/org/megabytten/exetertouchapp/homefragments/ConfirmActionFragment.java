@@ -32,9 +32,9 @@ public class ConfirmActionFragment extends Fragment {
 
     View view;
 
-    //Section for initialising a "submit training" confirmAction
+    //Section for initialising a "submit training" OR "update training" confirmAction
     private String mParamTeam, mParamFormattedDate, mParamTime, mParamLocation, mParamDrills;
-    private boolean isTraining;
+    private boolean isTraining, isNewTraining;
 
     //Section for intialising a "delete training" confirmAction
     private String trainingId;
@@ -44,7 +44,7 @@ public class ConfirmActionFragment extends Fragment {
     //Section for initialising a "delete account" confirmAction
     private boolean isDeleteAccount;
 
-    public static ConfirmActionFragment createConfirmAction_for_SubmitTraining(String team, String formattedDate, String time, String location, String drills) {
+    public static ConfirmActionFragment createConfirmAction_for_SubmitTraining(String team, String formattedDate, String time, String location, String drills, boolean isNewTraining, String ID) {
         ConfirmActionFragment fragment = new ConfirmActionFragment();
         fragment.mParamTeam = team;
         fragment.mParamFormattedDate = formattedDate;
@@ -52,9 +52,17 @@ public class ConfirmActionFragment extends Fragment {
         fragment.mParamLocation = location;
         fragment.mParamDrills = drills;
         fragment.isTraining = true;
+        fragment.isNewTraining = isNewTraining;
+
+        if (!isNewTraining && ID != null){
+            fragment.trainingId = ID;
+        }
 
         return fragment;
     }
+
+
+
 
     public static ConfirmActionFragment createConfirmAction_for_DeleteTraining(String trainingID){
         ConfirmActionFragment fragment = new ConfirmActionFragment();
@@ -78,27 +86,44 @@ public class ConfirmActionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_confirm_action, container, false);
 
-        //inits the UI if the confirmActionFrag is a Submit Training type
+        //Both newTraining and updateTraining use similar logic - so grouped.
         if (isTraining){
+            //inits the UI if the confirmActionFrag is a Submit Training type
             Button yesBtn = view.findViewById(R.id.yesBtn);
-            yesBtn.setText("Submit Training");
-            yesBtn.setOnClickListener((v) -> {
-                Thread pushTrainingData = new Thread(() -> {
-                    try {
-                        onSubmitTraining();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-                pushTrainingData.start();
-            });
 
-            Button noBtn = view.findViewById(R.id.noBtn);
-            noBtn.setText("Change Training");
-            noBtn.setOnClickListener((v) -> {
-                Thread pushTrainingData = new Thread(() -> {
-                    onReturnToCreateTraining();
+            if (isNewTraining){
+                yesBtn.setText("Submit Training");
+                yesBtn.setOnClickListener((v) -> {
+                    Thread pushTrainingData = new Thread(() -> {
+                        try {
+                            onSubmitTraining();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    pushTrainingData.start();
                 });
+
+
+            } else { //fragment is not a new training - meant to Update an existing training
+                yesBtn.setText("Update Training");
+                yesBtn.setOnClickListener((v) -> {
+                    Thread pushTrainingData = new Thread(() -> {
+                        try {
+                            onUpdateTraining();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    pushTrainingData.start();
+                });
+            }
+
+            //backButton (noBtn) is the same for both Create and Update training types!
+            Button noBtn = view.findViewById(R.id.noBtn);
+            noBtn.setText("Edit Training");
+            noBtn.setOnClickListener((v) -> {
+                Thread pushTrainingData = new Thread(() -> onReturnToCreateTraining());
                 pushTrainingData.start();
             });
         }
@@ -225,6 +250,72 @@ public class ConfirmActionFragment extends Fragment {
         }
     }
 
+    private void onUpdateTraining() throws  IOException{
+        //establish variables
+        String charset = java.nio.charset.StandardCharsets.UTF_8.name();
+        String email = User.getInstance().getEmail();
+        String password = User.getInstance().getPassword();
+
+        String team;
+        if (mParamTeam.equalsIgnoreCase("High Performance")) {
+            team = "hp";
+        } else if (mParamTeam.equalsIgnoreCase("development")) {
+            team = "dv";
+        } else {
+            team = "cb";
+        }
+
+        URL obj = new URL("http://megabytten.org/eutrcapp/trainings/update");
+
+        //sets the encoded query
+        String query = String.format("email=%s&password=%s&team=%s&date=%s&time=%s&location=%s&drills=%s"
+                , URLEncoder.encode(email, charset)
+                , URLEncoder.encode(password, charset)
+                , URLEncoder.encode(team, charset)
+                , URLEncoder.encode(mParamFormattedDate, charset)
+                , URLEncoder.encode(mParamTime, charset)
+                , URLEncoder.encode(mParamLocation, charset)
+                , URLEncoder.encode(mParamDrills, charset));
+        System.out.println("query = " + query);
+
+        byte[] postData = query.getBytes(StandardCharsets.UTF_8 );
+        int postDataLength = postData.length;
+
+        //establishes HTTP connection with URL via the URL object, "obj"
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestMethod("POST");
+        con.setRequestProperty("ID", trainingId);
+
+        //post method set up!
+        con.setDoOutput( true );
+        con.setInstanceFollowRedirects( false );
+        con.setRequestMethod( "POST" );
+        con.setRequestProperty( "Content-Type", "application/x-www-form-urlencoded");
+        con.setRequestProperty( "charset", "utf-8");
+        con.setRequestProperty( "Content-Length", Integer.toString( postDataLength ));
+        con.setUseCaches( false );
+
+        DataOutputStream os = new DataOutputStream( con.getOutputStream() );
+        os.write(query.getBytes(charset));
+        os.flush();
+        os.close();
+
+        int responseCode = con.getResponseCode();
+        System.out.println("POST Response Code :: " + responseCode);
+
+        if (responseCode == HttpURLConnection.HTTP_OK) { //success
+            System.out.println("Training successfully pushed to DB for updating!");
+            getActivity().runOnUiThread(()-> {
+                Toast.makeText(getContext(), "Training successfully updated!", Toast.LENGTH_LONG).show();
+            });
+
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            HomeActivity.replaceFragmentExternal(fragmentTransaction, HomeFragment.getInstance());
+        } else {
+            System.out.println("POST request not worked");
+        }
+    }
+
     private void onDeleteAccount() throws IOException{
         String charset = java.nio.charset.StandardCharsets.UTF_8.name();
         String email = User.getInstance().getEmail();
@@ -339,9 +430,9 @@ public class ConfirmActionFragment extends Fragment {
     }
 
     private void onReturnToCreateTraining(){
-        CreateTrainingFragment.setFragmentArgs(mParamTeam, mParamTime, mParamLocation, mParamDrills);
+        CreateTrainingFragment frag = new CreateTrainingFragment(mParamTeam, mParamTime, mParamLocation, mParamDrills, isNewTraining, trainingId);
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        HomeActivity.replaceFragmentExternal(fragmentTransaction, CreateTrainingFragment.getInstance());
+        HomeActivity.replaceFragmentExternal(fragmentTransaction, frag);
     }
 
     private void onReturnToProfile(){

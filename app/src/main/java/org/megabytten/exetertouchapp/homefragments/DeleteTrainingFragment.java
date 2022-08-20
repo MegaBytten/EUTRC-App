@@ -65,6 +65,7 @@ public class DeleteTrainingFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         searchView = view.findViewById(R.id.searchView);
         Button editBtn = view.findViewById(R.id.editBtn);
+        Button attendanceBtn = view.findViewById(R.id.attendanceBtn);
         Button delBtn = view.findViewById(R.id.deleteBtn);
         Button backBtn = view.findViewById(R.id.backBtn);
 
@@ -102,17 +103,36 @@ public class DeleteTrainingFragment extends Fragment {
 
         //click Listeners for buttons
         editBtn.setOnClickListener((v)->{
-            //do stuff
+            RecyclerAdapter rA = (RecyclerAdapter) recyclerView.getAdapter();
+            if (rA.getSelectedTrainingTitleTxt() != null){
+                Training selectedTraining = rA.getSelectedTraining();
+                CreateTrainingFragment frag = new CreateTrainingFragment(selectedTraining.getTeam(), selectedTraining.getTime(), selectedTraining.getLocation(), selectedTraining.getDrills(), false, String.valueOf(selectedTraining.getId()) );
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                HomeActivity.replaceFragmentExternal(fragmentTransaction, frag);
+
+
+            } else { //selected Button == null, training has not been selected
+                Toast.makeText(getContext(), "Please select a training to edit", Toast.LENGTH_SHORT).show();
+            }
         });
+        
+        attendanceBtn.setOnClickListener((v -> {
+            // TODO: 20/8/22 Finish view page
+//              - Add a new fragment coaches only which displays attendance
+//              - uses a recylcer view which inflates a new list Item that holds details:
+//                  > Full attendance count
+//                  > first/last (full) name
+//                  > email + phone number
+        }));
 
         delBtn.setOnClickListener((v)->{
             RecyclerAdapter rA = (RecyclerAdapter) recyclerView.getAdapter();
             if (rA.getSelectedTrainingTitleTxt() != null){
-                ConfirmActionFragment confirmActionFragment = ConfirmActionFragment.createConfirmAction_for_DeleteTraining(rA.getSelectedTrainingId());
+                ConfirmActionFragment confirmActionFragment = ConfirmActionFragment.createConfirmAction_for_DeleteTraining(String.valueOf( rA.getSelectedTraining().getId() ));
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 HomeActivity.replaceFragmentExternal(fragmentTransaction, confirmActionFragment);
             } else { //selected Button == null, training has not been selected
-                Toast.makeText(getContext(), "Please select a training", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Please select a training to delete", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -218,12 +238,8 @@ public class DeleteTrainingFragment extends Fragment {
         getActivity().runOnUiThread(()-> setRecyclerAdapter());
     }
 
-    // TODO: 18/8/22
-//      - Add functionality behind edit/delete training button
-//      - clean up fragment_delete_training.xml
-
     private void setRecyclerAdapter(){
-        RecyclerAdapter rA = new RecyclerAdapter(trainingsList);
+        RecyclerAdapter rA = new RecyclerAdapter();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -245,10 +261,6 @@ public class DeleteTrainingFragment extends Fragment {
     private void filterList(){
         filteredData.clear();
         String query = searchView.getQuery().toString();
-
-//        System.out.println("filterList Called! Debug mode: ");
-//        System.out.println("\n\nQuery = " + query);
-//        System.out.println("Booleans (Id, date, team, time) = " + filterId + filterDate + filterTeam + filterTime);
 
         //if query is empty, display all trainings
         if (query.equalsIgnoreCase("")){

@@ -91,7 +91,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="350dp"
         android:layout_marginTop="20dp"/>
 
     <LinearLayout
@@ -102,27 +102,36 @@
         <!-- ADD GREYED OUT, "activated" once user selects a training @clickable textviews -->
         <Button
             android:id="@+id/editBtn"
-            android:backgroundTint="#00570A"
+            android:backgroundTint="#13ADBD"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Edit training"
+            android:text="Edit"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_weight="50"
-            android:layout_gravity="center"
-            android:textSize="13dp"/>
+            android:layout_gravity="center" />
+
+        <Button
+            android:id="@+id/attendanceBtn"
+            android:backgroundTint="#7813BD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="RSVPs"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="50"
+            android:layout_gravity="center" />
 
         <Button
             android:id="@+id/deleteBtn"
-            android:backgroundTint="#700000"
+            android:backgroundTint="#BD1358"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Delete training"
+            android:text="Delete"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_weight="50"
-            android:layout_gravity="center"
-            android:textSize="13dp"/>
+            android:layout_gravity="center" />
 
     </LinearLayout>
 

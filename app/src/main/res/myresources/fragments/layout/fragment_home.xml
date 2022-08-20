@@ -561,15 +561,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Add Training"
-                        android:backgroundTint="#107F33"
+                        android:backgroundTint="#785617"
                         android:layout_margin="10dp" />
 
                     <Button
                         android:id="@+id/deleteTrainingBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Modify Training"
-                        android:backgroundTint="#AB1B16"
+                        android:text="View Trainings"
+                        android:backgroundTint="#785617"
                         android:layout_margin="10dp" />
 
                 </LinearLayout>

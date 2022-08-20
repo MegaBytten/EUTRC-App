@@ -25,8 +25,6 @@ import java.util.Date;
 
 public class CreateTrainingFragment extends Fragment {
 
-    private static CreateTrainingFragment createTrainingFragment;
-
     //section for UI views!
     View view;
     EditText timeInput, locationInput, drillsInput;
@@ -36,35 +34,24 @@ public class CreateTrainingFragment extends Fragment {
     //calendar dates
     String formattedDate;
 
-    public static CreateTrainingFragment getInstance(){
-        if (createTrainingFragment == null){
-            System.out.println("Initialising createTrainingFragment.");
-            createTrainingFragment = new CreateTrainingFragment();
-        }
-        return createTrainingFragment;
-    }
-
-    private static final String ARG_PARAM_TEAM = "paramTeam";
-    private static final String ARG_PARAM_TIME = "paramTime";
-    private static final String ARG_PARAM_LOCATION = "paramLocation";
-    private static final String ARG_PARAM_DRILLS = "paramDrills";
+    private String team, time, location, drills, ID;
+    private boolean isNewTraining = true;
 
     public CreateTrainingFragment() {
-        // Required empty public constructor
+        //Creates a new blank fragment
     }
 
-    public static void setFragmentArgs(String team, String time, String location, String drills){
-        Bundle args = new Bundle();
+    public CreateTrainingFragment(String team, String time, String location, String drills, boolean isNewTraining, String ID){
+        this.team = team;
+        this.time = time;
+        this.location = location;
+        this.drills = drills;
+        this.isNewTraining = isNewTraining;
 
-        args.putString(ARG_PARAM_TEAM, team);
-        args.putString(ARG_PARAM_TIME, time);
-        args.putString(ARG_PARAM_LOCATION, location);
-        args.putString(ARG_PARAM_DRILLS, drills);
-
-        getInstance().setArguments(args);
+        if (!isNewTraining && ID != null){
+            this.ID = ID;
+        }
     }
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,10 +86,16 @@ public class CreateTrainingFragment extends Fragment {
         //ON SUBMIT BUTTON CLICK - checks if submissionisOk before sending to confirmActionFragment
         Button submitBtn = view.findViewById(R.id.submitBtn);
         submitBtn.setOnClickListener((v) -> {
+            // TODO: 20/8/22 Temporary fix for apostrophe SQL error
+//              - setting location or drills with text containing an ' messes with SQL query
+//              - temporarily fixed by below if(clause) to prevent any ' in msg
+
+            if (locationInput.getText().toString().indexOf('\'') > -1 || drillsInput.getText().toString().indexOf('\'') > -1){ //index has been found of '
+                getActivity().runOnUiThread(()-> Toast.makeText(getContext(), "Location/Drills cannot contain a single quote symbol (')", Toast.LENGTH_SHORT).show());
+            }
+
             if (!isTrainingOk()) {
-                getActivity().runOnUiThread(()->{
-                    Toast.makeText(getContext(), "Please enter a time.", Toast.LENGTH_SHORT).show();
-                });
+                getActivity().runOnUiThread(()-> Toast.makeText(getContext(), "Please enter a time", Toast.LENGTH_SHORT).show());
                 return;
             }
             
@@ -111,8 +104,9 @@ public class CreateTrainingFragment extends Fragment {
             String location = locationInput.getText().toString();
             String drills = drillsInput.getText().toString();
 
+            //the same fragment is created regardless of whether new or updating - but fragment handles processing for both differently
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-            HomeActivity.replaceFragmentExternal(fragmentTransaction, ConfirmActionFragment.createConfirmAction_for_SubmitTraining(team, formattedDate, time, location, drills));
+            HomeActivity.replaceFragmentExternal(fragmentTransaction, ConfirmActionFragment.createConfirmAction_for_SubmitTraining(team, formattedDate, time, location, drills, isNewTraining, ID));
         });
 
         Button backButton = view.findViewById(R.id.backBtn);
@@ -126,18 +120,13 @@ public class CreateTrainingFragment extends Fragment {
             formattedDate = formatDate(dayOfMonth, month+1, year);
         });
 
-        //this method LOADS all previous information into the fragment
-        //prevents losing all training info upon not confirming!
-        if (getArguments() != null) {
-            String team = getArguments().getString(ARG_PARAM_TEAM);
-            String time = getArguments().getString(ARG_PARAM_TIME);
-            String location = getArguments().getString(ARG_PARAM_LOCATION);
-            String drills = getArguments().getString(ARG_PARAM_DRILLS);
-
-            //calendar date is not updated, must reselect date
+        //once all init completed, loads data assigned when creating fragment (if any)
+        if (time != null){ //data has been passed
+            timeInput.setText(time);
+            locationInput.setText(location);
+            drillsInput.setText(drills);
             TextView calendarTxt = view.findViewById(R.id.calendarTxt);
             calendarTxt.setTextColor(Color.RED);
-
             if (team.equalsIgnoreCase("High performance")){
                 teamSpinner.setSelection(0);
             } else if (team.equalsIgnoreCase("Development")){
@@ -145,13 +134,7 @@ public class CreateTrainingFragment extends Fragment {
             } else {
                 teamSpinner.setSelection(2);
             }
-
-            timeInput.setText(time);
-            locationInput.setText(location);
-            drillsInput.setText(drills);
-
         }
-
         return view;
     }
 

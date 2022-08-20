@@ -97,16 +97,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     };
     SortedList<Training> sortedList = new SortedList<>(Training.class, mCallback);
 
-    //other variables
-    private ArrayList<Training> trainingsList;
 
     private TextView selectedTrainingTitleTxt;
-    private String selectedTrainingId;
-
-    //constructor
-    public RecyclerAdapter(ArrayList<Training> trainingsList){
-        this.trainingsList = trainingsList;
-    }
+    private Training selectedTraining;
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
         //define all views from deletetrainings_item.xml here
@@ -152,7 +145,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             }
             selectedTrainingTitleTxt = holder.trainingTitleTxt;
             selectedTrainingTitleTxt.setTextColor(Color.RED);
-            selectedTrainingId = holder.id.getText().toString();
+            selectedTraining = tr;
 
             Toast.makeText(v.getContext(), "Training #" + tr.getId() + " selected.", Toast.LENGTH_SHORT).show();
         });
@@ -216,7 +209,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         return selectedTrainingTitleTxt;
     }
 
-    public String getSelectedTrainingId() {
-        return selectedTrainingId;
+    public Training getSelectedTraining() {
+        return selectedTraining;
     }
 }

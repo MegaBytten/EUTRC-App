@@ -358,7 +358,7 @@ public class HomeFragment extends Fragment {
     private void onAddTrainingBtn(){
         FragmentTransaction fragmentTransaction = getActivity()
                 .getSupportFragmentManager().beginTransaction();
-        HomeActivity.replaceFragmentExternal(fragmentTransaction, CreateTrainingFragment.getInstance());
+        HomeActivity.replaceFragmentExternal(fragmentTransaction, new CreateTrainingFragment());
     }
 
     private void onDeleteTrainingBtn(){
