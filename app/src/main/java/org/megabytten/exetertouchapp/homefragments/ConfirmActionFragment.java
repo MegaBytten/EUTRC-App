@@ -33,32 +33,33 @@ public class ConfirmActionFragment extends Fragment {
     View view;
 
     //Section for initialising a "submit training" confirmAction
-    private static final String ARG_PARAM_BOOL_ISTRAINING = "isTraining";
-    private static final String ARG_PARAM_TEAM = "paramTeam";
-    private static final String ARG_PARAM_FORMATTED_DATE = "paramFormattedDate";
-    private static final String ARG_PARAM_TIME = "paramTime";
-    private static final String ARG_PARAM_LOCATION = "paramLocation";
-    private static final String ARG_PARAM_DRILLS = "paramDrills";
-
     private String mParamTeam, mParamFormattedDate, mParamTime, mParamLocation, mParamDrills;
     private boolean isTraining;
+
+    //Section for intialising a "delete training" confirmAction
+    private String trainingId;
+    private boolean isDeleteTraining;
 
 
     //Section for initialising a "delete account" confirmAction
     private boolean isDeleteAccount;
 
-    public static ConfirmActionFragment createConfirmAction_for_SubmitTraining(String team, String formattedDate, String time, String location, String drills, boolean isTraining) {
+    public static ConfirmActionFragment createConfirmAction_for_SubmitTraining(String team, String formattedDate, String time, String location, String drills) {
         ConfirmActionFragment fragment = new ConfirmActionFragment();
-        Bundle args = new Bundle();
+        fragment.mParamTeam = team;
+        fragment.mParamFormattedDate = formattedDate;
+        fragment.mParamTime = time;
+        fragment.mParamLocation = location;
+        fragment.mParamDrills = drills;
+        fragment.isTraining = true;
 
-        args.putBoolean(ARG_PARAM_BOOL_ISTRAINING, isTraining);
-        args.putString(ARG_PARAM_TEAM, team);
-        args.putString(ARG_PARAM_FORMATTED_DATE, formattedDate);
-        args.putString(ARG_PARAM_TIME, time);
-        args.putString(ARG_PARAM_LOCATION, location);
-        args.putString(ARG_PARAM_DRILLS, drills);
+        return fragment;
+    }
 
-        fragment.setArguments(args);
+    public static ConfirmActionFragment createConfirmAction_for_DeleteTraining(String trainingID){
+        ConfirmActionFragment fragment = new ConfirmActionFragment();
+        fragment.isDeleteTraining = true;
+        fragment.trainingId = trainingID;
         return fragment;
     }
 
@@ -71,14 +72,6 @@ public class ConfirmActionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            isTraining = getArguments().getBoolean(ARG_PARAM_BOOL_ISTRAINING);
-            mParamTeam = getArguments().getString(ARG_PARAM_TEAM);
-            mParamFormattedDate = getArguments().getString(ARG_PARAM_FORMATTED_DATE);
-            mParamTime = getArguments().getString(ARG_PARAM_TIME);
-            mParamLocation = getArguments().getString(ARG_PARAM_LOCATION);
-            mParamDrills = getArguments().getString(ARG_PARAM_DRILLS);
-        }
     }
 
     @Override
@@ -101,10 +94,35 @@ public class ConfirmActionFragment extends Fragment {
             });
 
             Button noBtn = view.findViewById(R.id.noBtn);
-            noBtn.setText("Edit Training");
+            noBtn.setText("Change Training");
             noBtn.setOnClickListener((v) -> {
                 Thread pushTrainingData = new Thread(() -> {
-                    onEditTraining();
+                    onReturnToCreateTraining();
+                });
+                pushTrainingData.start();
+            });
+        }
+
+        //inits the UI if confirmActionFrag is a Delete Training type
+        if(isDeleteTraining){
+            Button yesBtn = view.findViewById(R.id.yesBtn);
+            yesBtn.setText("Delete Training");
+            yesBtn.setOnClickListener((v) -> {
+                Thread deleteTrainingThread = new Thread(() -> {
+                    try {
+                        onDeleteTraining();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                deleteTrainingThread.start();
+            });
+
+            Button noBtn = view.findViewById(R.id.noBtn);
+            noBtn.setText("Change Training");
+            noBtn.setOnClickListener((v) -> {
+                Thread pushTrainingData = new Thread(() -> {
+                    onReturnToSelectTraining();
                 });
                 pushTrainingData.start();
             });
@@ -116,14 +134,14 @@ public class ConfirmActionFragment extends Fragment {
             Button yesBtn = view.findViewById(R.id.yesBtn);
             yesBtn.setText("Delete Account");
             yesBtn.setOnClickListener((v) -> {
-                Thread pushTrainingData = new Thread(() -> {
+                Thread deleteAccountThread = new Thread(() -> {
                     try {
                         onDeleteAccount();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 });
-                pushTrainingData.start();
+                deleteAccountThread.start();
             });
 
             Button noBtn = view.findViewById(R.id.noBtn);
@@ -207,12 +225,6 @@ public class ConfirmActionFragment extends Fragment {
         }
     }
 
-    private void onEditTraining(){
-        CreateTrainingFragment.setFragmentArgs(mParamTeam, mParamTime, mParamLocation, mParamDrills);
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        HomeActivity.replaceFragmentExternal(fragmentTransaction, CreateTrainingFragment.getInstance());
-    }
-
     private void onDeleteAccount() throws IOException{
         String charset = java.nio.charset.StandardCharsets.UTF_8.name();
         String email = User.getInstance().getEmail();
@@ -232,6 +244,7 @@ public class ConfirmActionFragment extends Fragment {
         //establishes HTTP connection with URL via the URL object, "obj"
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
+        con.setConnectTimeout(5000);
 
         //post method set up!
         con.setDoOutput( true );
@@ -251,15 +264,84 @@ public class ConfirmActionFragment extends Fragment {
         System.out.println("POST Response Code :: " + responseCode);
 
         if (responseCode == HttpURLConnection.HTTP_OK) { //success
-
-            getActivity().runOnUiThread(()-> {
-                Toast.makeText(getContext(), "Successfully Deleted Account", Toast.LENGTH_SHORT).show();
-
-            });
+            getActivity().runOnUiThread(()-> Toast.makeText(getContext(), "Successfully Deleted Training", Toast.LENGTH_SHORT).show());
             getActivity().finish();
         } else {
+            getActivity().runOnUiThread(()-> Toast.makeText(getContext(), "Unable to Delete Account", Toast.LENGTH_SHORT).show());
 
         }
+    }
+
+    private void onDeleteTraining() throws IOException{
+        String charset = java.nio.charset.StandardCharsets.UTF_8.name();
+        String email = User.getInstance().getEmail();
+        String password = User.getInstance().getPassword();
+
+        URL obj = new URL("http://megabytten.org/eutrcapp/trainings/delete");
+
+        //sets the encoded query
+        String query = String.format("email=%s&password=%s&trainingID=%s"
+                , URLEncoder.encode(email, charset)
+                , URLEncoder.encode(password, charset)
+                , URLEncoder.encode(trainingId, charset));
+        System.out.println("query = " + query);
+
+        byte[] postData = query.getBytes(StandardCharsets.UTF_8 );
+        int postDataLength = postData.length;
+
+        //establishes HTTP connection with URL via the URL object, "obj"
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestMethod("POST");
+        con.setConnectTimeout(5000);
+
+
+        //post method set up!
+        con.setDoOutput( true );
+        con.setInstanceFollowRedirects( false );
+        con.setRequestMethod( "POST" );
+        con.setRequestProperty( "Content-Type", "application/x-www-form-urlencoded");
+        con.setRequestProperty( "charset", "utf-8");
+        con.setRequestProperty( "Content-Length", Integer.toString( postDataLength ));
+        con.setUseCaches( false );
+
+        DataOutputStream os = new DataOutputStream( con.getOutputStream() );
+        os.write(query.getBytes(charset));
+        os.flush();
+        os.close();
+
+        int responseCode = con.getResponseCode();
+        System.out.println("POST Response Code :: " + responseCode);
+
+        if (responseCode == HttpURLConnection.HTTP_OK) { //success
+            getActivity().runOnUiThread(()-> Toast.makeText(getContext(), "Successfully Deleted Training", Toast.LENGTH_SHORT).show());
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            HomeActivity.replaceFragmentExternal(fragmentTransaction, HomeFragment.getInstance());
+        } else {
+            getActivity().runOnUiThread(()-> Toast.makeText(getContext(), "Unable to Delete Training", Toast.LENGTH_SHORT).show());
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            HomeActivity.replaceFragmentExternal(fragmentTransaction, new DeleteTrainingFragment());
+        }
+    }
+
+
+
+    /*
+    ################################################################################################
+    ##################################### Return section ###########################################
+    ################### - Section contains all methods which involve going BACK ####################
+    ################### - Returns user to previous page where they came from    ####################
+    ################################################################################################
+     */
+
+    private void onReturnToSelectTraining(){
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        HomeActivity.replaceFragmentExternal(fragmentTransaction, new DeleteTrainingFragment());
+    }
+
+    private void onReturnToCreateTraining(){
+        CreateTrainingFragment.setFragmentArgs(mParamTeam, mParamTime, mParamLocation, mParamDrills);
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        HomeActivity.replaceFragmentExternal(fragmentTransaction, CreateTrainingFragment.getInstance());
     }
 
     private void onReturnToProfile(){

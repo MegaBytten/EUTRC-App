@@ -97,11 +97,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     };
     SortedList<Training> sortedList = new SortedList<>(Training.class, mCallback);
 
-
     //other variables
     private ArrayList<Training> trainingsList;
 
     private TextView selectedTrainingTitleTxt;
+    private String selectedTrainingId;
 
     //constructor
     public RecyclerAdapter(ArrayList<Training> trainingsList){
@@ -133,13 +133,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         return new MyViewHolder(itemView);
     }
 
-    // TODO: 18/8/22
-//      - Need to add clickable=true to .xml
-//      - OnClick it adds a blue border and saves the button to Button currentlySelected
-//      - on newClick, changes currentlySelected Border back to nothing, and then sets clickedButton as currentlySelected,
-//          and changes border of clicked
-//      - stuff.
-
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.MyViewHolder holder, int position) {
         //change views by accessing them through: 'holder.viewName'
@@ -157,9 +150,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
             if (selectedTrainingTitleTxt != null){
                 selectedTrainingTitleTxt.setTextColor(Color.BLACK);
             }
-
             selectedTrainingTitleTxt = holder.trainingTitleTxt;
             selectedTrainingTitleTxt.setTextColor(Color.RED);
+            selectedTrainingId = holder.id.getText().toString();
 
             Toast.makeText(v.getContext(), "Training #" + tr.getId() + " selected.", Toast.LENGTH_SHORT).show();
         });
@@ -221,5 +214,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     public TextView getSelectedTrainingTitleTxt() {
         return selectedTrainingTitleTxt;
+    }
+
+    public String getSelectedTrainingId() {
+        return selectedTrainingId;
     }
 }

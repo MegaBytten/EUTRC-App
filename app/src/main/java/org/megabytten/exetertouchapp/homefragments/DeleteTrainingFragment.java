@@ -10,6 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -105,7 +106,14 @@ public class DeleteTrainingFragment extends Fragment {
         });
 
         delBtn.setOnClickListener((v)->{
-
+            RecyclerAdapter rA = (RecyclerAdapter) recyclerView.getAdapter();
+            if (rA.getSelectedTrainingTitleTxt() != null){
+                ConfirmActionFragment confirmActionFragment = ConfirmActionFragment.createConfirmAction_for_DeleteTraining(rA.getSelectedTrainingId());
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                HomeActivity.replaceFragmentExternal(fragmentTransaction, confirmActionFragment);
+            } else { //selected Button == null, training has not been selected
+                Toast.makeText(getContext(), "Please select a training", Toast.LENGTH_SHORT).show();
+            }
         });
 
         backBtn.setOnClickListener((v -> {
@@ -137,7 +145,6 @@ public class DeleteTrainingFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                String queryTxt = searchView.getQuery().toString();
                 filterList();
                 return true;
             }
@@ -182,7 +189,6 @@ public class DeleteTrainingFragment extends Fragment {
             if (sb.toString().equalsIgnoreCase("null")) {
                 //return is null, no trainings for the month.
                 System.out.println("Trainings this month.json = null");
-                noTrainings();
                 return;
             }
 
@@ -212,23 +218,9 @@ public class DeleteTrainingFragment extends Fragment {
         getActivity().runOnUiThread(()-> setRecyclerAdapter());
     }
 
-    private void noTrainings(){
-        // TODO: 18/8/22
-//          - occurs when the select * from trainings; query returns NO results
-//          - called in line 87
-//          - needs to run an runOnUi method which adds a textview saying "No trainings. Create one first!"
-    }
-
     // TODO: 18/8/22
 //      - Add functionality behind edit/delete training button
 //      - clean up fragment_delete_training.xml
-//      - Add functionality behind search bar/filtering!
-//          > done on submission of search, scans through trainingsList and when certain if (criteria == true)
-//              then adds those 'accepted' trainings to a new list
-//      - allow user to 'select' a training
-//          > make linearLayouts clickable
-//          > onClick removes border of current saved linLay (if != null), saves clicked linLay as current,
-//               and adds new border to currentlySaved linLay
 
     private void setRecyclerAdapter(){
         RecyclerAdapter rA = new RecyclerAdapter(trainingsList);

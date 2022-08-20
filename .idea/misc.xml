@@ -27,6 +27,8 @@
         <entry key="app/src/main/res/layout/fragment_update_password.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_view_training.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/menu/home_navigation_menu.xml" value="0.253125" />
+        <entry key="app/src/main/res/myresources/fragments/layout/fragment_confirm_action.xml" value="0.15520833333333334" />
+        <entry key="app/src/main/res/myresources/fragments/layout/fragment_create_training.xml" value="0.15520833333333334" />
         <entry key="app/src/main/res/myresources/fragments/layout/fragment_delete_training.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/myresources/fragments/layout/fragment_home.xml" value="0.1" />
         <entry key="app/src/main/res/myresources/listitems/layout/deletetrainings_item.xml" value="0.3098958333333333" />
