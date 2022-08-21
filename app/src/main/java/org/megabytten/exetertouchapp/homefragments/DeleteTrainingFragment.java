@@ -65,7 +65,7 @@ public class DeleteTrainingFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         searchView = view.findViewById(R.id.searchView);
         Button editBtn = view.findViewById(R.id.editBtn);
-        Button attendanceBtn = view.findViewById(R.id.attendanceBtn);
+        Button detailsBtn = view.findViewById(R.id.detailsBtn);
         Button delBtn = view.findViewById(R.id.deleteBtn);
         Button backBtn = view.findViewById(R.id.backBtn);
 
@@ -115,10 +115,18 @@ public class DeleteTrainingFragment extends Fragment {
                 Toast.makeText(getContext(), "Please select a training to edit", Toast.LENGTH_SHORT).show();
             }
         });
-        
-        attendanceBtn.setOnClickListener((v -> {
+
+        detailsBtn.setOnClickListener((v -> {
+            RecyclerAdapter rA = (RecyclerAdapter) recyclerView.getAdapter();
+            if (rA.getSelectedTrainingTitleTxt() != null){
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                HomeActivity.replaceFragmentExternal(fragmentTransaction, new ViewTrainingDetailsFragment(rA.getSelectedTraining()));
+            } else { //selected Button == null, training has not been selected
+                Toast.makeText(getContext(), "Please select a training to edit", Toast.LENGTH_SHORT).show();
+            }
             // TODO: 20/8/22 Finish view page
 //              - Add a new fragment coaches only which displays attendance
+//              - New webhook which pulls selected training_id attendance/unavailability data!
 //              - uses a recylcer view which inflates a new list Item that holds details:
 //                  > Full attendance count
 //                  > first/last (full) name
@@ -188,7 +196,6 @@ public class DeleteTrainingFragment extends Fragment {
     }
 
     private void getTrainings() throws IOException, JSONException {
-
         URL url = new URL("http://megabytten.org/eutrcapp/trainings.json");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setConnectTimeout(10000);

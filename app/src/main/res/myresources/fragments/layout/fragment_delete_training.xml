@@ -112,11 +112,11 @@
             android:layout_gravity="center" />
 
         <Button
-            android:id="@+id/attendanceBtn"
+            android:id="@+id/detailsBtn"
             android:backgroundTint="#7813BD"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="RSVPs"
+            android:text="Details"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_weight="50"

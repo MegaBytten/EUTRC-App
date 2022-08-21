@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 public class Training {
 
-    private int dateDay, dateMonth, dateYear, attendance, id;
+    private int dateDay, dateMonth, dateYear, attendance, unavailability, id;
     private String team, location, drills, time;
 
     public Training(int dateDay, int dateMonth, int dateYear, int id, String team, String time) {
@@ -71,6 +71,14 @@ public class Training {
 
     public void setAttendance(int attendance) {
         this.attendance = attendance;
+    }
+
+    public int getUnavailability() {
+        return unavailability;
+    }
+
+    public void setUnavailability(int unavailability) {
+        this.unavailability = unavailability;
     }
 
     public String getTeam() {
