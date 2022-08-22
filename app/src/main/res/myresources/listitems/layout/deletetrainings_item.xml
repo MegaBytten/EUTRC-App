@@ -154,6 +154,31 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/RSVPContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <Button
+            android:id="@+id/availableBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#107F33"
+            android:text="Available"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/unavailableBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#AB1B16"
+            android:text="Unavailable"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
 
 
 </LinearLayout>

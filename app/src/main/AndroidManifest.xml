@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.megabytten.exetertouchapp" >
+    package="org.megabytten.touchapp" >
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -17,16 +17,16 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31" >
         <activity
-            android:name=".VerificationActivity"
+            android:name="org.megabytten.touchapp.VerificationActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
+            android:name="org.megabytten.touchapp.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".SignupActivity"
+            android:name="org.megabytten.touchapp.SignupActivity"
             android:exported="false" />
         <activity
-            android:name=".LauncherActivity"
+            android:name="org.megabytten.touchapp.LauncherActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/layout/activity_signup.xml" value="0.253125" />
         <entry key="app/src/main/res/layout/activity_verification.xml" value="0.24818840579710144" />
         <entry key="app/src/main/res/layout/deletetrainings_item.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/eventstraining_item.xml" value="0.3072916666666667" />
         <entry key="app/src/main/res/layout/fragment_calendar.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_confirm_action.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_create_training.xml" value="0.29583333333333334" />
@@ -28,10 +29,14 @@
         <entry key="app/src/main/res/layout/fragment_view_training.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/fragment_view_training_details.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/menu/home_navigation_menu.xml" value="0.253125" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1575" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1575" />
         <entry key="app/src/main/res/myresources/fragments/layout/fragment_confirm_action.xml" value="0.15520833333333334" />
         <entry key="app/src/main/res/myresources/fragments/layout/fragment_create_training.xml" value="0.3095097859700522" />
         <entry key="app/src/main/res/myresources/fragments/layout/fragment_delete_training.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/myresources/fragments/layout/fragment_events.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/myresources/fragments/layout/fragment_home.xml" value="0.2620895385742188" />
+        <entry key="app/src/main/res/myresources/fragments/layout/fragment_view_training_details.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/myresources/listitems/layout/deletetrainings_item.xml" value="0.3098958333333333" />
       </map>
     </option>

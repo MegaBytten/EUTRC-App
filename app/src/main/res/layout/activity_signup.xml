@@ -11,7 +11,7 @@
         android:id="@+id/EUTRCSignupText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="EUTRC - Sign Up"
+        android:text="Sign Up"
         android:layout_centerHorizontal="true"
         android:textSize="20dp"
         android:layout_marginTop="35dp"/>
