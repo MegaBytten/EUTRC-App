@@ -40,11 +40,6 @@ public class ViewTrainingDetailsFragment extends Fragment {
 
     }
 
-    /*
-    // TODO: 22/8/22
-        - change EUTRC Naming on all files
-     */
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

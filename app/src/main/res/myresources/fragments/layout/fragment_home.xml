@@ -14,10 +14,11 @@
         android:layout_gravity="center"
         android:text="Welcome"
         android:textAlignment="center"
-        android:textColor="@color/black"
         android:textSize="20dp"
         android:textStyle="bold"
         android:layout_marginBottom="10dp"/>
+    <!--        android:textColor="@color/black"-->
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -33,7 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#EAEAEA">
+                >
+<!--                android:background="#EAEAEA"-->
 
                 <TextView
                     android:id="@+id/hpSectionTitleTxt"
@@ -43,7 +45,8 @@
                     android:text="HP (1's &amp; 2's)  - Next Training"
                     android:textSize="14dp"
                     android:textStyle="bold"
-                    android:background="#D5D5D5"/>
+                    />
+<!--                android:background="#D5D5D5"-->
 
 
                 <ScrollView
@@ -205,8 +208,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#EAEAEA"
+
                 android:layout_marginTop="20dp">
+<!--                android:background="#EAEAEA"-->
 
                 <TextView
                     android:layout_width="match_parent"
@@ -215,7 +219,8 @@
                     android:text="DEV (3's &amp; 4's) - Next Training"
                     android:textSize="14dp"
                     android:textStyle="bold"
-                    android:background="#D5D5D5"/>
+                    />
+<!--                android:background="#D5D5D5"-->
 
 
                 <ScrollView
@@ -371,8 +376,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#EAEAEA"
+
                 android:layout_marginTop="20dp">
+<!--                android:background="#EAEAEA"-->
 
                 <TextView
                     android:layout_width="match_parent"
@@ -381,7 +387,8 @@
                     android:text="Club - Next Training"
                     android:textSize="14dp"
                     android:textStyle="bold"
-                    android:background="#D5D5D5"/>
+                    />
+<!--                android:background="#D5D5D5"-->
 
 
                 <ScrollView
@@ -545,9 +552,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Coach's Section"
-                    android:textColor="#7d785f"
                     android:textSize="20dp"
                     android:textStyle="bold"/>
+                <!--                    android:textColor="#7d785f"-->
 
 <!--                This holds the add/remove training buttons-->
                 <LinearLayout
