@@ -553,8 +553,9 @@
                     android:layout_height="wrap_content"
                     android:text="Coach's Section"
                     android:textSize="20dp"
-                    android:textStyle="bold"/>
-                <!--                    android:textColor="#7d785f"-->
+                    android:textStyle="bold"
+                    android:textColor="#7d785f"/>
+
 
 <!--                This holds the add/remove training buttons-->
                 <LinearLayout

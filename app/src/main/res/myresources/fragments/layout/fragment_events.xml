@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".homefragments.EventsFragment"
-    android:background="#D8FEFF"
     android:orientation="vertical"
     android:padding="20dp">
 
@@ -29,7 +28,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="Events"
-                    android:textColor="@color/black"
                     android:gravity="center"
                     android:textSize="20dp"/>
 
@@ -46,8 +44,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Last"
-                        android:textColor="@color/black"
-                        android:backgroundTint="#70FBFF"
                         android:textSize="12dp"/>
 
                     <TextView
@@ -55,7 +51,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Month"
-                        android:textColor="@color/black"
                         android:textStyle="bold"
                         android:gravity="center"
                         android:textSize="18dp"
@@ -66,8 +61,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Next"
-                        android:textColor="@color/black"
-                        android:backgroundTint="#70FBFF"
                         android:textSize="12dp"/>
 
 
