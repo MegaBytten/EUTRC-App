@@ -19,7 +19,6 @@
             android:text="Training #ID"
             android:layout_gravity="center"
             android:textSize="16dp"
-            android:textColor="@color/black"
             android:layout_marginTop="10dp"/>
 
         <!-- LinLay for ID -->
@@ -35,8 +34,7 @@
                 android:layout_height="wrap_content"
                 android:text="ID: "
                 android:layout_margin="2dp"
-                android:textAlignment="center"
-                android:textColor="@color/black"/>
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/id"
@@ -61,7 +59,7 @@
                 android:text="Date: "
                 android:layout_margin="2dp"
                 android:textAlignment="center"
-                android:textColor="@color/black"/>
+                />
 
             <TextView
                 android:id="@+id/date"
@@ -86,7 +84,7 @@
                 android:text="Team: "
                 android:layout_margin="2dp"
                 android:textAlignment="center"
-                android:textColor="@color/black"/>
+                />
 
             <TextView
                 android:id="@+id/team"
@@ -112,7 +110,7 @@
                 android:text="Location: "
                 android:layout_margin="2dp"
                 android:textAlignment="center"
-                android:textColor="@color/black"/>
+                />
 
             <TextView
                 android:id="@+id/location"
@@ -138,7 +136,7 @@
                 android:text="Drills: "
                 android:layout_margin="2dp"
                 android:textAlignment="center"
-                android:textColor="@color/black"/>
+                />
 
             <TextView
                 android:id="@+id/drills"

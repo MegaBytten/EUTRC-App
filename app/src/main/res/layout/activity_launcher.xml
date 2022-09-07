@@ -38,10 +38,11 @@
         android:id="@+id/emailAddressLoginInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_marginTop="5dp"
         android:layout_centerVertical="true"
-        android:hint="ed546@exeter.ac.uk"/>
+        android:layout_marginTop="5dp"
+        android:ems="10"
+        android:lines="1"
+        android:hint="ed546@exeter.ac.uk" />
 
     <TextView
         android:id="@+id/passwordLoginText"
@@ -58,6 +59,7 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
+        android:lines="1"
         android:layout_marginTop="5dp"
         android:layout_below="@+id/passwordLoginText"/>
 
