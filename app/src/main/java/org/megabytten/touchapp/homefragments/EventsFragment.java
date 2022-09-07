@@ -1,8 +1,10 @@
 package org.megabytten.touchapp.homefragments;
 
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -224,7 +226,7 @@ public class EventsFragment extends Fragment {
         if (calendarDate.getMonth().toString().equalsIgnoreCase(LocalDate.now().getMonth().toString())){
             monthTitleTxt.setTextColor(Color.RED);
         } else {
-            monthTitleTxt.setTextColor(Color.BLACK);
+            monthTitleTxt.setTextColor(Color.WHITE);
         }
 
         StringBuilder sb = new StringBuilder();
